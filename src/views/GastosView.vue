@@ -1,0 +1,77 @@
+<template>
+  <div class="p-4">
+    <h1 class="text-xl font-bold mb-4">Gastos</h1>
+
+    <!-- Formulario -->
+    <form @submit.prevent="crear">
+      <input v-model="gasto.concepto" type="text" placeholder="Concepto" class="border p-2 mr-2"/>
+      <input v-model.number="gasto.importe" type="number" placeholder="Importe" class="border p-2 mr-2"/>
+      <input v-model="gasto.fecha" type="date" class="border p-2 mr-2"/>
+      <select v-model.number="gasto.categoria.id" class="border p-2 mr-2">
+        <option v-for="cat in categoriaStore.categorias" :key="cat.id" :value="cat.id">
+          {{ cat.categoria }}
+        </option>
+      </select>
+      <button type="submit" class="bg-blue-500 text-white p-2">Crear</button>
+    </form>
+
+    <!-- Tabla -->
+    <table class="table-auto border-collapse border mt-4 w-full">
+      <thead>
+        <tr>
+          <th class="border px-2 py-1">ID</th>
+          <th class="border px-2 py-1">Fecha</th>
+          <th class="border px-2 py-1">Concepto</th>
+          <th class="border px-2 py-1">Importe</th>
+          <th class="border px-2 py-1">Categoría</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="g in store.gastos" :key="g.id">
+          <td class="border px-2 py-1">{{ g.id }}</td>
+          <td class="border px-2 py-1">{{ g.fecha }}</td>
+          <td class="border px-2 py-1">{{ g.concepto }}</td>
+          <td class="border px-2 py-1">{{ g.importe }}</td>
+          <td class="border px-2 py-1">{{ g.categoria.categoria }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, reactive, onMounted } from "vue";
+import { useGastoStore } from "../stores/gastoStore";
+import { useCategoriaStore } from "../stores/categoriaStore";
+import type { GastoDto } from "../types/types";
+
+export default defineComponent({
+  setup() {
+    const store = useGastoStore();
+    const categoriaStore = useCategoriaStore();
+
+    const gasto = reactive<GastoDto>({
+      concepto: "",
+      importe: 0,
+      fecha: new Date().toISOString().split("T")[0] || "",
+      categoria: { id: 0, categoria: "" }, 
+    });
+
+    const crear = async () => {
+      if (!gasto.concepto || gasto.importe <= 0 || gasto.categoria.id <= 0) return;
+      await store.crearGasto({ ...gasto });
+      gasto.concepto = "";
+      gasto.importe = 0;
+      gasto.fecha = new Date().toISOString().split("T")[0] || "";
+      gasto.categoria.id = 0;
+    };
+
+    onMounted(() => {
+      store.fetchGastos();
+      categoriaStore.fetchCategorias();
+    });
+
+    return { store, categoriaStore, gasto, crear };
+  },
+});
+</script>
