@@ -36,6 +36,13 @@
         </tr>
       </tbody>
     </table>
+
+    <Pagination
+      :currentPage="store.page"
+      :totalPages="store.totalPages"
+      @change-page="changePage"
+    />
+
   </div>
 </template>
 
@@ -44,8 +51,10 @@ import { defineComponent, reactive, onMounted } from "vue";
 import { useGastoStore } from "../stores/gastoStore";
 import { useCategoriaStore } from "../stores/categoriaStore";
 import type { GastoDto } from "../types/types";
+import Pagination from "../components/Pagination.vue";
 
 export default defineComponent({
+  components: { Pagination },
   setup() {
     const store = useGastoStore();
     const categoriaStore = useCategoriaStore();
@@ -54,7 +63,7 @@ export default defineComponent({
       concepto: "",
       importe: 0,
       fecha: new Date().toISOString().split("T")[0] || "",
-      categoria: { id: 0, categoria: "" }, 
+      categoria: { id: 0, categoria: "" },
     });
 
     const crear = async () => {
@@ -64,6 +73,13 @@ export default defineComponent({
       gasto.importe = 0;
       gasto.fecha = new Date().toISOString().split("T")[0] || "";
       gasto.categoria.id = 0;
+      await store.fetchGastos();
+    };
+
+    const changePage = (page: number) => {
+      if (page < 0 || page >= store.totalPages) return;
+      store.page = page;
+      store.fetchGastos();
     };
 
     onMounted(() => {
@@ -71,7 +87,7 @@ export default defineComponent({
       categoriaStore.fetchCategorias();
     });
 
-    return { store, categoriaStore, gasto, crear };
+    return { store, categoriaStore, gasto, crear, changePage };
   },
 });
 </script>
