@@ -50,7 +50,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    // Array de páginas empezando desde 1 para mostrar
     const pages = computed(() => Array.from({ length: props.totalPages }, (_, i) => i + 1));
     return { pages };
   },

@@ -9,42 +9,37 @@
     </form>
 
     <!-- Tabla -->
-    <table class="table-auto border-collapse border mt-4 w-full">
-      <thead>
-        <tr>
-          <th class="border px-2 py-1">ID</th>
-          <th class="border px-2 py-1">Nombre</th>
-          <th class="border px-2 py-1">Activo</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="cat in store.categorias" :key="cat.id">
-          <td class="border px-2 py-1">{{ cat.id }}</td>
-          <td class="border px-2 py-1">{{ cat.categoria }}</td>
-          <td class="border px-2 py-1">{{ cat.activo ? "Sí" : "No" }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <CustomTable 
+      :headers="['ID', 'Nombre']" 
+      :cols="['id', 'categoria']" 
+      :rows="store.categorias" >
+    </CustomTable>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from "vue";
 import { useCategoriaStore } from "../stores/categoriaStore";
+import CustomTable from "../components/CustomTable.vue";
 import type { CategoriaDto } from "../types/types";
 
 export default defineComponent({
+  components: {
+    CustomTable
+  },
   setup() {
     const store = useCategoriaStore();
 
-    const categoria = reactive<CategoriaDto>({
+    const categoria = reactive<Omit<CategoriaDto, 'id'>>({
       categoria: "",
+      activo: false
     });
 
     const crear = async () => {
       if (!categoria.categoria) return;
-      await store.crearCategoria({ ...categoria });
+      await store.crearCategoria({ ...categoria, id: 0 } as CategoriaDto);
       categoria.categoria = "";
+      categoria.activo = true;
     };
 
     onMounted(() => store.fetchCategorias());
