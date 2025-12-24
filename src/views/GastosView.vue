@@ -3,7 +3,7 @@
     <h1 class="text-xl font-bold mb-4">Gastos</h1>
 
     <!-- Formulario -->
-    <div class="">
+    <div>
       <form @submit.prevent="crear">
         <input v-model="gasto.concepto" type="text" placeholder="Concepto" class="border p-2 mr-2"/>
         <input v-model.number="gasto.importe" type="number" placeholder="Importe" class="border p-2 mr-2"/>
@@ -19,7 +19,6 @@
 
     <GastosPorCategoriaChart class="mt-6" />
 
-    <!-- Tabla -->
     <CustomTable 
       :headers="['ID', 'Fecha', 'Concepto', 'Importe', 'Categoría']"
       :cols="['id', 'fecha', 'concepto', 'importe', 'categoria']"
@@ -34,7 +33,6 @@
       <template #categoria="{ row }">
         {{ row.categoria.categoria }}
       </template>
-
     </CustomTable>
 
     <Pagination
@@ -42,19 +40,20 @@
       :totalPages="store.totalPages"
       @change-page="changePage"
     />
-
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from "vue";
-import { useGastoStore } from "../stores/gastoStore";
-import { useCategoriaStore } from "../stores/categoriaStore";
+import { useGastoStore } from "../stores/useGastoStore";
+import { useCategoriaStore } from "../stores/useCategoriaStore";
 import type { GastoDto } from "../types/types";
 import CustomTable from "../components/CustomTable.vue";
 import Pagination from "../components/Pagination.vue";
 import { formatARS, formatDate } from "../composables/useUtils";
 import GastosPorCategoriaChart from "../components/GastosPorCategoriaChart.vue";
+import { authApi, gastoApi, categoriaApi } from "../api/api";
+import axios from "axios";
 
 export default defineComponent({
   components: { CustomTable, Pagination, GastosPorCategoriaChart },
@@ -65,16 +64,28 @@ export default defineComponent({
     const gasto = reactive<GastoDto>({
       concepto: "",
       importe: 0,
-      fecha: new Date().toISOString().split("T")[0] || "",
+      fecha: new Date().toISOString().split("T")[0],
       categoria: { id: 0, categoria: "" },
     });
 
+    const login = async () => {
+      try {
+        const response = await authApi.login({ username: "mmontaldo" });
+        if (response && typeof response === "string") {
+          localStorage.setItem("token", response);
+        }
+        console.log("Login response:", response);
+      } catch (error) {
+        console.error("Login failed:", error);
+      }
+    };
+    
     const crear = async () => {
       if (!gasto.concepto || gasto.importe <= 0 || gasto.categoria.id <= 0) return;
       await store.crearGasto({ ...gasto });
       gasto.concepto = "";
       gasto.importe = 0;
-      gasto.fecha = new Date().toISOString().split("T")[0] || "";
+      gasto.fecha = new Date().toISOString().split("T")[0];
       gasto.categoria.id = 0;
       await store.fetchGastos();
     };
@@ -85,12 +96,13 @@ export default defineComponent({
       store.fetchGastos();
     };
 
-    onMounted(() => {
-      store.fetchGastos();
-      categoriaStore.fetchCategorias();
+    onMounted(async () => {
+      await login();
+      await store.fetchGastos();
+      await categoriaStore.fetchCategorias();
     });
 
-    return { store, categoriaStore, gasto, crear, changePage, formatARS, formatDate };
+    return { store, categoriaStore, gasto, crear, changePage, formatARS, formatDate, login };
   },
 });
 </script>

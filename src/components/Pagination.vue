@@ -1,15 +1,13 @@
 <template>
   <div class="flex justify-center mt-4 space-x-1">
-    <!-- Botón anterior -->
     <button
       @click="$emit('change-page', currentPage - 1)"
       :disabled="currentPage === 0"
       class="px-3 py-1 border rounded disabled:opacity-50"
     >
-      Prev
+      Anterior
     </button>
 
-    <!-- Números de página -->
     <button
       v-for="n in pages"
       :key="n"
@@ -23,13 +21,12 @@
       {{ n }}
     </button>
 
-    <!-- Botón siguiente -->
     <button
       @click="$emit('change-page', currentPage + 1)"
       :disabled="currentPage === totalPages - 1"
       class="px-3 py-1 border rounded disabled:opacity-50"
     >
-      Next
+      Siguiente
     </button>
   </div>
 </template>

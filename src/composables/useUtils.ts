@@ -7,12 +7,19 @@ export function useUtils() {
         maximumFractionDigits: 2,
     });
 
-    const dateFormatter = new Intl.DateTimeFormat("es-AR");
-
     const formatARS = (value: number) => ars.format(value);
 
-    const formatDate = (date: string | Date) =>
-    dateFormatter.format(new Date(date));
+    const formatDate = (dateStr: string): string => {
+        if (!dateStr) return "";
+        const [year, month, day] = dateStr.split("-").map(Number);
+        const date = new Date(year, month - 1, day);
+        return date.toLocaleDateString("es-AR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+        });
+    }
+
 
     return {
         formatARS,
