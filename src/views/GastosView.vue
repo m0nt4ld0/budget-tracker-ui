@@ -48,8 +48,8 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from "vue";
-import { useGastoStore } from "../stores/gastoStore";
-import { useCategoriaStore } from "../stores/categoriaStore";
+import { useGastoStore } from "../stores/useGastoStore";
+import { useCategoriaStore } from "../stores/useCategoriaStore";
 import type { GastoDto } from "../types/types";
 import CustomTable from "../components/CustomTable.vue";
 import Pagination from "../components/Pagination.vue";

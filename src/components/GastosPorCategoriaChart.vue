@@ -1,37 +1,28 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import ApexCharts from "vue3-apexcharts";
-import { useGastoStore } from "../stores/gastoStore";
-
+import { useGastoStore } from "../stores/useGastoStore";
 
 const store = useGastoStore();
 
 const now = new Date();
-const currentYear = now.getFullYear();
-const currentMonth = now.getMonth();
+const year = now.getFullYear();
+const month = String(now.getMonth() + 1).padStart(2, "0");
 
-const grouped = computed(() => {
-  const map: Record<string, number> = {};
+const fechaDesde = `${year}-${month}-01`;
+const fechaHasta = `${year}-${month}-31`;
 
-  for (const g of store.gastos) {
-    const [year, month, day] = g.fecha.split("-").map(Number);
-    const gastoDate = new Date(year, month - 1, day);
-
-    if (
-      gastoDate.getFullYear() === currentYear &&
-      gastoDate.getMonth() === currentMonth
-    ) {
-      const categoria = g.categoria.categoria;
-      map[categoria] = (map[categoria] ?? 0) + g.importe;
-    }
-  }
-
-  return map;
+onMounted(async () => {
+  await store.fetchTotalesPorCategoria(fechaDesde, fechaHasta);
 });
 
+const labels = computed(() =>
+  Object.keys(store.totalesPorCategoria)
+);
 
-const labels = computed(() => Object.keys(grouped.value));
-const series = computed(() => Object.values(grouped.value));
+const series = computed(() =>
+  Object.values(store.totalesPorCategoria)
+);
 
 const chartOptions = computed(() => ({
   labels: labels.value,

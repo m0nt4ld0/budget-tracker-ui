@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from "vue";
-import { useCategoriaStore } from "../stores/categoriaStore";
+import { useCategoriaStore } from "../stores/useCategoriaStore";
 import CustomTable from "../components/CustomTable.vue";
 import type { CategoriaDto } from "../types/types";
 
