@@ -12,10 +12,15 @@ export const categoriaApi = {
 };
 
 export const gastoApi = {
-  getGastos: (fechaDesde?: string, fechaHasta?: string) => 
-    api.get<{ content: GastoDto[]; totalElements: number }>("/gastos/", { params: { fechaDesde, fechaHasta } }).then(res => res.data),
-  
+  getGastos: (page = 0, size = 10, fechaDesde?: string, fechaHasta?: string) =>
+    api
+      .get<{ content: GastoDto[]; totalElements: number }>("/gastos/", {
+        params: { page, size, fechaDesde, fechaHasta },
+      })
+      .then(res => res.data),
+
   crearGasto: (dto: GastoDto) => api.post<GastoDto>("/gastos/crear", dto).then(res => res.data),
 };
+
 
 export default api;
