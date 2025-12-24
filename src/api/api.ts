@@ -5,6 +5,25 @@ const api = axios.create({
   baseURL: "http://localhost:8080/api",
 });
 
+api.interceptors.request.use(
+  (config: any) => { 
+    const token = localStorage.getItem("token");
+    if (token) {
+      if (!config.headers) config.headers = {};
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+export const authApi = {
+  login: ({ username }: { username: string }) =>
+    api.post<string>("/auth/login", { username })
+       .then(res => res.data),
+};
+
+
 export const categoriaApi = {
   getCategorias: () =>
     api.get<CategoriaDto[]>("/categorias/")
@@ -42,5 +61,9 @@ export const gastoApi = {
       { params: { fechaDesde, fechaHasta } }
     ).then(res => res.data),
 };
+
+export function logout() {
+  localStorage.removeItem("token");
+}
 
 export default api;
