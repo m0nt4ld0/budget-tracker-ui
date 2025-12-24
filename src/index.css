@@ -11,5 +11,6 @@
     --color-primary: var(--color-primary);
     --color-secondary: var(--color-secondary);
     --color-danger: var(--color-danger);
+    /* --color-a: #6b7280; */
   }
 }

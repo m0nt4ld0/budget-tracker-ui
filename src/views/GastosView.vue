@@ -17,6 +17,8 @@
       </form>
     </div>
 
+    <GastosPorCategoriaChart class="mt-6" />
+
     <!-- Tabla -->
     <CustomTable 
       :headers="['ID', 'Fecha', 'Concepto', 'Importe', 'Categoría']"
@@ -52,9 +54,10 @@ import type { GastoDto } from "../types/types";
 import CustomTable from "../components/CustomTable.vue";
 import Pagination from "../components/Pagination.vue";
 import { formatARS, formatDate } from "../composables/useUtils";
+import GastosPorCategoriaChart from "../components/GastosPorCategoriaChart.vue";
 
 export default defineComponent({
-  components: { CustomTable, Pagination },
+  components: { CustomTable, Pagination, GastosPorCategoriaChart },
   setup() {
     const store = useGastoStore();
     const categoriaStore = useCategoriaStore();
