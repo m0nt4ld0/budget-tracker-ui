@@ -1,63 +1,76 @@
 <template>
-  <div class="p-4">
-    <h1 class="text-xl font-bold mb-4">Gastos</h1>
+  <div class="min-h-screen bg-gray-100">
+    <Navbar class="w-full fixed top-0 left-0 z-50" />
 
-    <!-- Formulario -->
-    <div>
-      <form @submit.prevent="crear">
-        <input 
-          v-model="gasto.concepto" 
-          type="text" 
-          placeholder="Concepto" 
-          class="border p-2 mr-2"/>
-        <input 
-          v-model.number="gasto.importe" 
-          type="number" 
-          placeholder="Importe" 
-          class="border p-2 mr-2"/>
-        <input 
-          v-model="gasto.fecha" 
-          type="date" 
-          class="border p-2 mr-2"/>
-        <select 
-          v-model.number="gasto.categoria.id" 
-          class="border p-2 mr-2">
-          <option 
-            v-for="cat in categoriaStore.categorias" 
-            :key="cat.id" 
-            :value="cat.id">
-            {{ cat.categoria }}
-          </option>
-        </select>
-        <button type="submit" class="bg-blue-500 text-white p-2">Crear</button>
-      </form>
-    </div>
+    <main class="pt-28 p-4">
+      <h1 class="text-xl font-bold mb-4">Tus gastos</h1>
 
-    <GastosPorCategoriaChart class="mt-6" />
+      <div>
+        <form @submit.prevent="crear" class="flex flex-wrap items-center gap-2">
+          <input 
+            v-model="gasto.concepto" 
+            type="text" 
+            placeholder="Concepto" 
+            class="mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
+          />
+          <input 
+            v-model.number="gasto.importe" 
+            type="number" 
+            placeholder="Importe" 
+            class="mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
+          />
+          <input 
+            v-model="gasto.fecha" 
+            type="date" 
+            class="mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
+          />
+          <select 
+            v-model.number="gasto.categoria.id" 
+            class="mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
+          >
+            <option 
+              v-for="cat in categoriaStore.categorias" 
+              :key="cat.id" 
+              :value="cat.id">
+              {{ cat.categoria }}
+            </option>
+          </select>
+          <button 
+            type="submit" 
+            class="text-white bg-indigo-500 hover:bg-indigo-600 focus:ring-4 focus:ring-indigo-500/20 shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none"
+          >
+            Crear
+          </button>
+        </form>
+      </div>
 
-    <CustomTable 
-      :headers="['ID', 'Fecha', 'Concepto', 'Importe', 'Categoría']"
-      :cols="['id', 'fecha', 'concepto', 'importe', 'categoria']"
-      :rows="store.gastos"
-    >
-      <template #fecha="{ row }">
-        {{ formatDate(row.fecha) }}
-      </template>
-      <template #importe="{ row }">
-        {{ formatARS(row.importe) }}
-      </template>
-      <template #categoria="{ row }">
-        {{ row.categoria.categoria }}
-      </template>
-    </CustomTable>
+      <GastosPorCategoriaChart class="mt-6" />
 
-    <Pagination
-      :currentPage="store.page"
-      :totalPages="store.totalPages"
-      @change-page="changePage"
-    />
+      <CustomTable 
+        :headers="['ID', 'Fecha', 'Concepto', 'Importe', 'Categoría']"
+        :cols="['id', 'fecha', 'concepto', 'importe', 'categoria']"
+        :rows="store.gastos"
+      >
+        <template #fecha="{ row }">
+          {{ formatDate(row.fecha) }}
+        </template>
+        <template #importe="{ row }">
+          {{ formatARS(row.importe) }}
+        </template>
+        <template #categoria="{ row }">
+          {{ row.categoria.categoria }}
+        </template>
+      </CustomTable>
+
+      <Pagination
+        :currentPage="store.page"
+        :totalPages="store.totalPages"
+        @change-page="changePage"
+      />
+    </main>
   </div>
 </template>
+
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from "vue";
@@ -69,10 +82,10 @@ import Pagination from "../components/Pagination.vue";
 import { formatARS, formatDate } from "../composables/useUtils";
 import GastosPorCategoriaChart from "../components/GastosPorCategoriaChart.vue";
 import { authApi, gastoApi, categoriaApi } from "../api/api";
-import axios from "axios";
+import Navbar from "../components/Navbar.vue";
 
 export default defineComponent({
-  components: { CustomTable, Pagination, GastosPorCategoriaChart },
+  components: { CustomTable, Pagination, GastosPorCategoriaChart, Navbar },
   setup() {
     const store = useGastoStore();
     const categoriaStore = useCategoriaStore();
