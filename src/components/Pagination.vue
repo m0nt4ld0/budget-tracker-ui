@@ -13,7 +13,7 @@
       :key="n"
       @click="$emit('change-page', n - 1)" 
       :class="{
-        'bg-blue-500 text-white': currentPage === n - 1,
+        'bg-indigo-500 hover:bg-indigo-600 text-white rounded-base font-medium': currentPage === n - 1,
         'border': currentPage !== n - 1,
       }"
       class="px-3 py-1 rounded"
