@@ -1,18 +1,23 @@
 import axios from "axios";
-import type { AxiosRequestConfig } from "axios";
 import type { CategoriaDto, GastoDto } from "../types/types";
+import type { AuthResponseDto } from "@/types/types";
+import { useUserStore } from "@/stores/useUserStore";
+
+import type { InternalAxiosRequestConfig } from "axios";
+
 
 const api = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 api.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      if (!config.headers) config.headers = {};
-      config.headers["Authorization"] = `Bearer ${token}`;
+  (config: InternalAxiosRequestConfig) => {
+    const userStore = useUserStore();
+
+    if (userStore.token) {
+      config.headers.Authorization = `Bearer ${userStore.token}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -21,25 +26,21 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 403) {
-      console.error("Error 403: No autorizado o token inválido");
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      const userStore = useUserStore();
+      userStore.logout();
+
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }
 );
 
+
 export const authApi = {
-  login: async ({ username }: { username: string }) => {
-    try {
-      const res = await api.post<string>("/auth/login", { username });
-      const token = res.data;
-      if (!token) throw new Error("Token no recibido desde el servidor");
-      localStorage.setItem("token", token);
-      return token;
-    } catch (err) {
-      console.error("Error en login:", err);
-      throw err;
-    }
+  async login(payload: { username: string }): Promise<AuthResponseDto> {
+    const response = await api.post<AuthResponseDto>("/auth/login", payload);
+    return response.data;
   },
 };
 
@@ -64,7 +65,9 @@ export const gastoApi = {
     const res = await api.get<{
       content: GastoDto[];
       totalElements: number;
-    }>("/gastos/", { params: { page, size, fechaDesde, fechaHasta } });
+    }>("/gastos/", {
+      params: { page, size, fechaDesde, fechaHasta },
+    });
     return res.data;
   },
 
@@ -74,15 +77,17 @@ export const gastoApi = {
   },
 
   getTotalesPorCategoria: async (fechaDesde: string, fechaHasta: string) => {
-    const res = await api.get<Record<string, number>>("/gastos/por-categoria", {
-      params: { fechaDesde, fechaHasta },
-    });
+    const res = await api.get<Record<string, number>>(
+      "/gastos/por-categoria",
+      { params: { fechaDesde, fechaHasta } }
+    );
     return res.data;
   },
 };
 
 export function logout() {
-  localStorage.removeItem("token");
+  const userStore = useUserStore();
+  userStore.logout();
 }
 
 export default api;

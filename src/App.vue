@@ -1,12 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-100">
-    <header class="bg-blue-600 text-white p-4">
-      <nav class="flex space-x-4">
-        <router-link to="/dashboard" class="hover:underline">Gastos</router-link>
-        <router-link to="/categorias" class="hover:underline">Categorías</router-link>
-      </nav>
-    </header>
-
+    <Navbar /> 
     <main class="p-4">
       <router-view />
     </main>
@@ -14,9 +8,14 @@
 </template>
 
 <script lang="ts">
-export default {
-  name: "Budget Tracker",
-};
+  import Navbar from "./components/Navbar.vue";
+
+  export default {
+    name: "Budget Tracker",
+    components: {
+      Navbar,
+    },
+  };
 </script>
 
 <style>

@@ -37,15 +37,21 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
-  const token = localStorage.getItem("token");
 
-  if (to.meta.requiresAuth && !token) {
+  if (!userStore.token) {
+    userStore.loadFromStorage();
+  }
+
+  const isAuthenticated = !!userStore.token;
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
     next("/login");
-  } else if (to.path === "/login" && token) {
+  } else if (to.path === "/login" && isAuthenticated) {
     next("/dashboard");
   } else {
     next();
   }
 });
+
 
 export default router;

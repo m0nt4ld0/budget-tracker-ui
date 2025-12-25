@@ -1,30 +1,47 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
+import type { AuthResponseDto } from "@/types/types";
 
-export const useUserStore = defineStore('user', {
+export const useUserStore = defineStore("user", {
   state: () => ({
-    username: '',
-    token: '',
+    username: "",
+    token: "",
+    nombre: "",
+    imagenUrl: "",
+    activo: false,
   }),
+
   actions: {
-    login(username: string, token: string) {
-      this.username = username
-      this.token = token
-      localStorage.setItem('token', token)
-      localStorage.setItem('username', username)
+    login(auth: AuthResponseDto) {
+      this.username = auth.username;
+      this.token = auth.token;
+      this.nombre = auth.nombre;
+      this.imagenUrl = auth.imagenUrl;
+      this.activo = auth.activo;
+
+      localStorage.setItem("auth", JSON.stringify(auth));
     },
+
     logout() {
-      this.username = ''
-      this.token = ''
-      localStorage.removeItem('token')
-      localStorage.removeItem('username')
+      this.username = "";
+      this.token = "";
+      this.nombre = "";
+      this.imagenUrl = "";
+      this.activo = false;
+
+      localStorage.removeItem("auth");
     },
+
     loadFromStorage() {
-      const token = localStorage.getItem('token')
-      const username = localStorage.getItem('username')
-      if (token && username) {
-        this.token = token
-        this.username = username
-      }
-    }
-  }
-})
+      const raw = localStorage.getItem("auth");
+      if (!raw) return;
+
+      const auth: AuthResponseDto = JSON.parse(raw);
+
+      this.username = auth.username;
+      this.token = auth.token;
+      this.nombre = auth.nombre;
+      this.imagenUrl = auth.imagenUrl;
+      this.activo = auth.activo;
+    },
+  },
+});
