@@ -5,11 +5,27 @@
     <!-- Formulario -->
     <div>
       <form @submit.prevent="crear">
-        <input v-model="gasto.concepto" type="text" placeholder="Concepto" class="border p-2 mr-2"/>
-        <input v-model.number="gasto.importe" type="number" placeholder="Importe" class="border p-2 mr-2"/>
-        <input v-model="gasto.fecha" type="date" class="border p-2 mr-2"/>
-        <select v-model.number="gasto.categoria.id" class="border p-2 mr-2">
-          <option v-for="cat in categoriaStore.categorias" :key="cat.id" :value="cat.id">
+        <input 
+          v-model="gasto.concepto" 
+          type="text" 
+          placeholder="Concepto" 
+          class="border p-2 mr-2"/>
+        <input 
+          v-model.number="gasto.importe" 
+          type="number" 
+          placeholder="Importe" 
+          class="border p-2 mr-2"/>
+        <input 
+          v-model="gasto.fecha" 
+          type="date" 
+          class="border p-2 mr-2"/>
+        <select 
+          v-model.number="gasto.categoria.id" 
+          class="border p-2 mr-2">
+          <option 
+            v-for="cat in categoriaStore.categorias" 
+            :key="cat.id" 
+            :value="cat.id">
             {{ cat.categoria }}
           </option>
         </select>

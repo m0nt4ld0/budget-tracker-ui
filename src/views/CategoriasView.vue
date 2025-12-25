@@ -9,11 +9,18 @@
     </form>
 
     <!-- Tabla -->
-    <CustomTable 
-      :headers="['ID', 'Nombre']" 
-      :cols="['id', 'categoria']" 
-      :rows="store.categorias" >
-    </CustomTable>
+  <CustomTable
+    :headers="['ID', 'Icono', 'Nombre']"
+    :cols="['id', 'icono', 'categoria']"
+    :rows="store.categorias"
+  >
+    <template #icono="{ row }">
+      <component
+        :is="heroIcons[row.icono as keyof typeof heroIcons] ?? defaultIcon"
+        class="w-5 h-5 text-gray-600"
+      />
+    </template>
+  </CustomTable>
   </div>
 </template>
 
@@ -22,6 +29,8 @@ import { defineComponent, reactive, onMounted } from "vue";
 import { useCategoriaStore } from "../stores/useCategoriaStore";
 import CustomTable from "../components/CustomTable.vue";
 import type { CategoriaDto } from "../types/types";
+import { heroIcons, defaultIcon } from "@/icons/heroIcons"
+
 
 export default defineComponent({
   components: {
@@ -32,6 +41,7 @@ export default defineComponent({
 
     const categoria = reactive<Omit<CategoriaDto, 'id'>>({
       categoria: "",
+      icono: defaultIcon,
       activo: false
     });
 
@@ -44,7 +54,7 @@ export default defineComponent({
 
     onMounted(() => store.fetchCategorias());
 
-    return { store, categoria, crear };
+    return { store, categoria, crear, heroIcons, defaultIcon };
   },
 });
 </script>

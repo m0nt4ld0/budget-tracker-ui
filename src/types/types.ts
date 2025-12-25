@@ -1,6 +1,9 @@
+import type { HeroIconName } from "@/icons/heroIcons";
+
 export interface CategoriaDto {
   id: number;
   categoria: string;
+  icono: HeroIconName;
   activo?: boolean;
 }
 
