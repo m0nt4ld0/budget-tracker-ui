@@ -74,7 +74,6 @@ export default defineComponent({
         if (response && typeof response === "string") {
           localStorage.setItem("token", response);
         }
-        console.log("Login response:", response);
       } catch (error) {
         console.error("Login failed:", error);
       }

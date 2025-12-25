@@ -39,8 +39,8 @@ Este proyecto es una SPA construida con **Vite + Vue 3 + TypeScript** que consum
 - Backend disponible en `http://localhost:8080/api` con endpoints:
   - `GET /categorias/`
   - `POST /categorias/crear`
-  - `GET /gastos/` (admite `page`, `size`, `fechaDesde`, `fechaHasta`)
-  - `POST /gastos/crear`
+  - `GET /dashboard/` (admite `page`, `size`, `fechaDesde`, `fechaHasta`)
+  - `POST /dashboard/crear`
 
 ## ⚙️ Instalación y ejecución
 
