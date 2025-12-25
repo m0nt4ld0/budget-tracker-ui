@@ -1,103 +1,226 @@
 <template>
-  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <img src="/assets/images/icons8-budget-94.png" 
-           alt="Budget Tracker" 
-           class="mx-auto h-25 w-auto" />
-    </div>
+  <div class="min-h-screen flex flex-col justify-between px-6 py-12 lg:px-8">
+    <div class="relative overflow-hidden flex-grow">
+      <div class="flex justify-center mb-6">
+        <img
+          src="/assets/images/icons8-budget-94.png"
+          alt="Budget Tracker"
+          class="h-20 w-auto"
+        />
+      </div>
+      
+      <Transition name="slide-fade-left" mode="out-in">
+        <section
+          v-if="authStep === 'hero'"
+          key="hero"
+          class="bg-neutral-primary flex flex-col justify-center min-h-full"
+        >
+          <div class="py-8 px-4 mx-auto max-w-screen-2xl text-center">
+            <h1
+              class="mb-6 text-4xl font-bold text-indigo-400 tracking-tighter md:text-5xl lg:text-6xl"
+            >
+              Budget Tracker
+            </h1>
+            <p class="mb-8 text-base text-body md:text-xl">
+              Cuida tu salud financiera
+            </p>
 
-  <Transition name="slide-fade-left">
-    <section 
-      v-if="!showLoginForm"  
-      class="bg-neutral-primary">
-        <div class="py-8 px-4 mx-auto max-w-screen-2xl text-center lg:py-16">
-            <h1 class="mb-6 text-4xl font-bold text-indigo-400 tracking-tighter text-heading md:text-5xl lg:text-6xl">Budget Tracker</h1>
-            <p class="mb-8 text-base font-normal text-body md:text-xl">Cuida tu salud financiera</p>
-            <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 md:space-x-4">
-                <button 
-                  type="button" 
-                  @click="showLoginForm = true"
-                  class="inline-flex items-center justify-center bg-indigo-500 text-white hover:bg-indigo-600 box-border border border-transparent focus:ring-4 focus:ring-brand-medium shadow-xs font-medium rounded-base text-base px-5 py-3 focus:outline-none">
-                    Iniciar sesión
-                    <svg 
-                      class="w-4 h-4 ms-1.5 -me-0.5" 
-                      aria-hidden="true" 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      width="24" 
-                      height="24" 
-                      fill="none" 
-                      viewBox="0 0 24 24">
-                      <path 
-                        stroke="currentColor" 
-                        stroke-linecap="round" 
-                        stroke-linejoin="round" 
-                        stroke-width="2" 
-                        d="M19 12H5m14 0-4 4m4-4-4-4"/>
-                    </svg>
-                </button>
-                <button 
-                  type="button" 
-                  class="text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-base px-5 py-3 focus:outline-none">
-                    Registrarse
-                </button>
+            <div
+              class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 md:space-x-4"
+            >
+              <button
+                type="button"
+                @click="authStep = 'login'"
+                class="inline-flex items-center justify-center bg-indigo-500 text-white hover:bg-indigo-600 px-5 py-3 rounded-base font-medium"
+              >
+                Iniciar sesión
+              </button>
+
+              <button
+                type="button"
+                @click="authStep = 'register'"
+                class="text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-base px-5 py-3 focus:outline-none"
+              >
+                Registrarse
+              </button>
             </div>
-        </div>
-    </section>
-</Transition>
+          </div>
+        </section>
+      </Transition>
 
-<Transition>
-    <div 
-      v-if="showLoginForm"
-      class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form 
-        @submit.prevent="handleLogin" 
-        class="space-y-6">
-        <div>
-          <label 
-            for="username" 
-            class="block text-sm/6 font-medium text-body">Usuario</label>
-          <div class="mt-2">
-            <input
-              id="username"
-              type="text"
-              name="username"
-              required
-              autocomplete="username"
-              v-model="username"
-              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-indigo-400 outline-2 -outline-offset-2 outline-black/9 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-            />
+      <Transition 
+        name="slide-fade-left" 
+        mode="out-in">
+        <div
+          v-if="authStep === 'login'"
+          key="login"
+          class="absolute inset-0 flex justify-center items-center"
+        >
+          <div class="sm:w-full sm:max-w-sm">
+            <form 
+              @submit.prevent="handleLogin" 
+              class="space-y-6">
+              <h3 class="text-center text-2xl font-bold text-indigo-400 mb-6">
+                Qué bueno verte de nuevo
+              </h3>
+
+              <div>
+                <label class="block text-sm font-medium text-body">
+                  Usuario
+                </label>
+                <input
+                  v-model="username"
+                  required
+                  autocomplete="username"
+                  class="
+                    mt-2 block w-full rounded-md
+                    bg-white
+                    border border-gray-400/20
+                    px-3 py-2
+                    text-gray-900
+                    focus:border-indigo-500
+                    focus:ring-2 focus:ring-indigo-500/20
+                    outline-none
+                  "
+                />
+              </div>
+
+              <button
+                type="submit"
+                class="w-full bg-indigo-500 hover:bg-indigo-400 text-white py-2 rounded-md font-semibold"
+              >
+                Ingresar
+              </button>
+
+              <button
+                type="button"
+                class="text-sm text-indigo-400 hover:underline"
+                @click="authStep = 'hero'"
+              >
+                ← Volver
+              </button>
+
+              <p class="text-center text-sm text-gray-400">
+                ¿No tenés una cuenta?
+                <a
+                  href="#"
+                  class="font-semibold text-indigo-400 hover:text-indigo-300"
+                  @click.prevent="authStep = 'register'"
+                >
+                  Registrate
+                </a>
+                <br>
+                o
+                <br>
+                ¿Tenés problemas para entrar?
+                <a
+                  href="#"
+                  class="font-semibold text-indigo-400 hover:text-indigo-300"
+                  @click.prevent="authStep = 'register'"
+                >
+                  Hacé clic acá
+                </a>
+              </p>
+
+              <p v-if="error" class="text-red-500 text-center">
+                {{ error }}
+              </p>
+            </form>
           </div>
         </div>
+      </Transition>
 
-        <div>
-          <button
-            type="submit"
-            class="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-          >
-            Ingresar
-          </button>
-          <button
-            type="button"
-            class="text-sm text-indigo-400 hover:underline mb-4"
-            @click="showLoginForm = false"
-          >
-            ← Volver
-          </button>
+      <Transition name="slide-fade-left" mode="out-in">
+        <div
+          v-if="authStep === 'register'"
+          key="register"
+          class="absolute inset-0 flex justify-center items-center"
+        >
+          <div class="sm:w-full sm:max-w-sm">
+            <form 
+              @submit.prevent="handleRegister" 
+              class="space-y-6">
+              <h3 class="text-center text-2xl font-bold text-indigo-400 mb-6">
+                Sumate a nuestra comunidad
+              </h3>
+
+              <div>
+                <label class="block text-sm font-medium text-body">
+                  Nombre completo
+                </label>
+                <input
+                  v-model="fullName"
+                  required
+                  autocomplete="name"
+                  class="
+                    mt-2 block w-full rounded-md
+                    bg-white
+                    border border-gray-400/20
+                    px-3 py-2
+                    text-gray-900
+                    focus:border-indigo-500
+                    focus:ring-2 focus:ring-indigo-500/20
+                    outline-none
+                  "
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-body">
+                  Usuario
+                </label>
+                <input
+                  v-model="username"
+                  required
+                  autocomplete="username"
+                  class="
+                    mt-2 block w-full rounded-md
+                    bg-white
+                    border border-gray-400/20
+                    px-3 py-2
+                    text-gray-900
+                    focus:border-indigo-500
+                    focus:ring-2 focus:ring-indigo-500/20
+                    outline-none
+                  "
+                />
+              </div>
+
+              <button
+                type="submit"
+                class="w-full bg-indigo-500 hover:bg-indigo-400 text-white py-2 rounded-md font-semibold"
+              >
+                Registrarse
+              </button>
+
+              <button
+                type="button"
+                class="text-sm text-indigo-400 hover:underline"
+                @click="authStep = 'hero'"
+              >
+                ← Volver
+              </button>
+
+              <p class="text-center text-sm text-gray-400">
+                ¿Ya tenés una cuenta?
+                <a
+                  href="#"
+                  class="font-semibold text-indigo-400 hover:text-indigo-300"
+                  @click.prevent="authStep = 'login'"
+                >
+                  Entrá acá
+                </a>
+              </p>
+
+              <p v-if="error" class="text-red-500 text-center">
+                {{ error }}
+              </p>
+            </form>
+          </div>
         </div>
-
-        <p 
-          v-if="error" 
-          class="text-red-500 text-center">{{ error }}</p>
-      </form>
-
-      <p class="mt-10 text-center text-sm/6 text-gray-400">
-        ¿No tenés una cuenta?
-        <a href="#" class="font-semibold text-indigo-400 hover:text-indigo-300">Registrate</a>
-      </p>
+      </Transition>
     </div>
-    </Transition>
-  </div>
-  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+
     <Footer />
   </div>
 </template>
@@ -110,70 +233,72 @@ import { useUserStore } from "@/stores/useUserStore";
 import Footer from "@/components/Footer.vue";
 
 export default defineComponent({
-  components: {
-    Footer,
-  },
+  name: "LoginView",
+  components: { Footer },
   setup() {
     const username = ref("");
+    const fullName = ref("");
     const error = ref("");
+    const authStep = ref<"hero" | "login" | "register">("hero");
+
     const userStore = useUserStore();
 
-  const showLoginForm = ref(false)
-
-  const handleLogin = async () => {
-    error.value = "";
-
-    try {
-      const authResponse = await authApi.login({
-        username: username.value,
-      });
-
-      userStore.login(authResponse);
-      router.push("/dashboard");
-    } catch (err: any) {
-      if (err.response?.data?.message) {
-        error.value = err.response.data.message;
-      } else if (err.message) {
-        error.value = err.message;
-      } else {
-        error.value = "Error al iniciar sesión";
+    const handleLogin = async () => {
+      error.value = "";
+      try {
+        const res = await authApi.login({ username: username.value });
+        userStore.login(res);
+        router.push("/dashboard");
+      } catch (err: any) {
+        error.value =
+          err.response?.data?.message ||
+          err.message ||
+          "Error al iniciar sesión";
       }
-    }
-  };
+    };
+
+    const handleRegister = async () => {
+      error.value = "";
+      try {
+        const res = await authApi.register({
+          name: fullName.value,
+          username: username.value,
+        });
+        userStore.login(res);
+        router.push("/dashboard");
+      } catch (err: any) {
+        error.value =
+          err.response?.data?.message ||
+          err.message ||
+          "Error al registrarse";
+      }
+    };
 
     return {
       username,
+      fullName,
       error,
+      authStep,
       handleLogin,
-      userStore,
-      showLoginForm,
+      handleRegister,
     };
   },
 });
 </script>
-<style lang="css" scoped>
-  .slide-fade-left-enter-active,
-  .slide-fade-left-leave-active {
-    transition: all 0.4s ease;
-  }
 
-  .slide-fade-left-enter-from {
-    opacity: 0;
-    transform: translateX(40px);
-  }
+<style scoped>
+.slide-fade-left-enter-active,
+.slide-fade-left-leave-active {
+  transition: all 0.4s ease;
+}
 
-  .slide-fade-left-enter-to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.slide-fade-left-enter-from {
+  opacity: 0;
+  transform: translateX(40px);
+}
 
-  .slide-fade-left-leave-from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  .slide-fade-left-leave-to {
-    opacity: 0;
-    transform: translateX(-40px);
-  }
+.slide-fade-left-leave-to {
+  opacity: 0;
+  transform: translateX(-40px);
+}
 </style>

@@ -36,10 +36,14 @@ api.interceptors.response.use(
   }
 );
 
-
 export const authApi = {
   async login(payload: { username: string }): Promise<AuthResponseDto> {
     const response = await api.post<AuthResponseDto>("/auth/login", payload);
+    return response.data;
+  },
+
+  async register(payload: { name: string; username: string }): Promise<AuthResponseDto> {
+    const response = await api.post<AuthResponseDto>("/auth/register", payload);
     return response.data;
   },
 };
