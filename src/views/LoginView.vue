@@ -21,9 +21,16 @@
             >
               Budget Tracker
             </h1>
-            <p class="mb-8 text-base text-body md:text-xl">
-              Cuida tu salud financiera
-            </p>
+            <div class="mb-8 h-8 overflow-hidden">
+              <Transition name="phrase" mode="out-in">
+                <p
+                  :key="currentPhrase"
+                  class="text-base text-body md:text-xl"
+                >
+                  {{ currentPhrase }}
+                </p>
+              </Transition>
+            </div>
 
             <div
               class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 md:space-x-4"
@@ -110,7 +117,7 @@
                   Registrate
                 </a>
                 <br>
-                o
+                - o -
                 <br>
                 ¿Tenés problemas para entrar?
                 <a
@@ -231,6 +238,7 @@ import { authApi } from "@/api/api";
 import router from "@/router/router";
 import { useUserStore } from "@/stores/useUserStore";
 import Footer from "@/components/Footer.vue";
+import { onMounted, onUnmounted, computed } from "vue";
 
 export default defineComponent({
   name: "LoginView",
@@ -240,6 +248,28 @@ export default defineComponent({
     const fullName = ref("");
     const error = ref("");
     const authStep = ref<"hero" | "login" | "register">("hero");
+
+    const phrases = [
+      "Cuida tu salud financiera",
+      "Ordena tus finanzas",
+      "Te ayuda a controlar tus gastos",
+    ];
+
+    const phraseIndex = ref(0);
+
+    const currentPhrase = computed(() => phrases[phraseIndex.value]);
+
+let interval: number;
+
+    onMounted(() => {
+      interval = window.setInterval(() => {
+        phraseIndex.value = (phraseIndex.value + 1) % phrases.length;
+      }, 2000); // 2 segundos
+    });
+
+    onUnmounted(() => {
+      clearInterval(interval);
+    });
 
     const userStore = useUserStore();
 
@@ -281,6 +311,7 @@ export default defineComponent({
       authStep,
       handleLogin,
       handleRegister,
+      currentPhrase,
     };
   },
 });
@@ -301,4 +332,34 @@ export default defineComponent({
   opacity: 0;
   transform: translateX(-40px);
 }
+
+.perspective {
+  perspective: 800px;
+}
+
+.phrase-enter-active,
+.phrase-leave-active {
+  transition: all 0.35s ease;
+}
+
+.phrase-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.phrase-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.phrase-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.phrase-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
 </style>
