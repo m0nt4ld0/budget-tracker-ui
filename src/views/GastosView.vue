@@ -54,7 +54,7 @@
       <CustomTable 
         :headers="['ID', 'Fecha', 'Concepto', 'Importe', 'Categoría']"
         :cols="['id', 'fecha', 'concepto', 'importe', 'categoria']"
-        :rows="store.gastos"
+        :rows="filtrados"
       >
         <template #fecha="{ row }">
           {{ formatDate(row.fecha) }}
