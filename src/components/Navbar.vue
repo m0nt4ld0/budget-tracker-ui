@@ -70,18 +70,24 @@ export default defineComponent({
             v-show="dropdownOpen"
             class="absolute right-0 mt-2 w-48 bg-indigo-50/10 backdrop-blur-sm border border-indigo-400/30 rounded-md shadow-lg"
           >
-            <div class="px-4 py-3 border-b border-indigo-400/30 text-indigo-500">
-              <span class="block font-medium">Hola, <strong>{{ userStore.nombre }}</strong></span>
-              <span class="block text-sm truncate">{{ userStore.email || 'usuario@email.com' }}</span>
+            <div 
+              class="px-4 py-3 border-b border-indigo-400/30 text-indigo-500">
+              <span 
+                class="block font-medium">Hola, <strong>{{ userStore.nombre }}</strong></span>
             </div>
-            <ul class="p-2 text-sm text-indigo-500 font-medium">
+            <ul 
+              class="p-2 text-sm text-indigo-500 font-medium">
               <li>
-                <router-link to="/dashboard" class="flex items-center w-full p-2 hover:bg-indigo-500/30 rounded">
+                <router-link 
+                  to="/dashboard" 
+                  class="flex items-center w-full p-2 hover:bg-indigo-500/30 rounded">
                   Dashboard
                 </router-link>
               </li>
               <li>
-                <router-link to="/categorias" class="flex items-center w-full p-2 hover:bg-indigo-500/30 rounded">
+                <router-link 
+                  to="/categorias" 
+                  class="flex items-center w-full p-2 hover:bg-indigo-500/30 rounded">
                   Categorías
                 </router-link>
               </li>
@@ -105,9 +111,17 @@ export default defineComponent({
         aria-controls="navbar-user"
         aria-expanded="false"
       >
-        <span class="sr-only">Open main menu</span>
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        <span class="sr-only">Abrir menú</span>
+        <svg 
+          class="w-6 h-6" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24">
+          <path 
+            stroke-linecap="round" 
+            stroke-linejoin="round" 
+            stroke-width="2" 
+            d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
 

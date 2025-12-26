@@ -52,8 +52,8 @@
       />
 
       <CustomTable 
-        :headers="['ID', 'Fecha', 'Concepto', 'Importe', 'Categoría']"
-        :cols="['id', 'fecha', 'concepto', 'importe', 'categoria']"
+        :headers="['Fecha', 'Concepto', 'Importe', 'Categoría']"
+        :cols="['fecha', 'concepto', 'importe', 'categoria']"
         :rows="filtrados"
       >
         <template #fecha="{ row }">
