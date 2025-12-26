@@ -46,6 +46,11 @@
 
       <GastosPorCategoriaChart class="mt-6" />
 
+      <Filters
+        :categorias="categoriaStore.categorias"
+        @update:selected="filtrarPorCategorias"
+      />
+
       <CustomTable 
         :headers="['ID', 'Fecha', 'Concepto', 'Importe', 'Categoría']"
         :cols="['id', 'fecha', 'concepto', 'importe', 'categoria']"
@@ -83,12 +88,29 @@ import { formatARS, formatDate } from "../composables/useUtils";
 import GastosPorCategoriaChart from "../components/GastosPorCategoriaChart.vue";
 import { authApi, gastoApi, categoriaApi } from "../api/api";
 import Navbar from "../components/Navbar.vue";
+import { ref, computed } from "vue";
+import Filters from "../components/Filters.vue";
+
 
 export default defineComponent({
-  components: { CustomTable, Pagination, GastosPorCategoriaChart, Navbar },
+  components: { CustomTable, Pagination, GastosPorCategoriaChart, Navbar, Filters },
   setup() {
     const store = useGastoStore();
     const categoriaStore = useCategoriaStore();
+    
+
+    const categoriasSeleccionadas = ref<number[]>([]);
+
+    const filtrados = computed(() => {
+        if (!categoriasSeleccionadas.value.length) return store.gastos;
+        return store.gastos.filter((g) =>
+          categoriasSeleccionadas.value.includes(g.categoria.id)
+        );
+      });
+
+      const filtrarPorCategorias = (ids: number[]) => {
+        categoriasSeleccionadas.value = ids;
+      };
 
     const gasto = reactive<GastoDto>({
       concepto: "",
@@ -130,7 +152,7 @@ export default defineComponent({
       await categoriaStore.fetchCategorias();
     });
 
-    return { store, categoriaStore, gasto, crear, changePage, formatARS, formatDate, login };
+    return { store, categoriaStore, gasto, crear, changePage, formatARS, formatDate, login, filtrados, filtrarPorCategorias };
   },
 });
 </script>
