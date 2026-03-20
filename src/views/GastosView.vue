@@ -1,13 +1,10 @@
 <template>
-  <div class="bg-gray-100 mx-auto flex flex-wrap items-center justify-center">
-    <Navbar class="w-full fixed top-0 left-0 z-50" />
+  <Layout>
+    <h1 class="text-xl md:text-2xl font-bold mb-4">Tus gastos</h1>
 
-    <main class="w-full max-w-screen-xl items-center justify-between pt-20 p-3 md:pt-28 md:p-4">
-      <h1 class="text-xl md:text-2xl font-bold mb-4">Tus gastos</h1>
-
-      <div>
-        <form @submit.prevent="crear" class="flex flex-col md:flex-row md:flex-wrap items-stretch md:items-center gap-2">
-          <input 
+    <div>
+      <form @submit.prevent="crear" class="flex flex-col md:flex-row md:flex-wrap items-stretch md:items-center gap-2">
+        <input 
             v-model="gasto.concepto" 
             type="text" 
             placeholder="Concepto" 
@@ -111,8 +108,7 @@
         />
       </div>
 
-    </main>
-  </div>
+    </Layout>
 </template>
 
 
@@ -126,12 +122,12 @@ import Pagination from "../components/Pagination.vue";
 import { formatARS, formatDate } from "../composables/useUtils";
 import GastosPorCategoriaChart from "../components/GastosPorCategoriaChart.vue";
 import { authApi } from "../api/api";
-import Navbar from "../components/Navbar.vue";
 import Filters from "../components/Filters.vue";
+import Layout from "@/views/Layout.vue";
 
 
 export default defineComponent({
-  components: { CustomTable, Pagination, GastosPorCategoriaChart, Navbar, Filters },
+  components: { CustomTable, Pagination, GastosPorCategoriaChart, Filters, Layout },
   setup() {
     const store = useGastoStore();
     const categoriaStore = useCategoriaStore();
