@@ -2,32 +2,32 @@
   <div class="bg-gray-100 mx-auto flex flex-wrap items-center justify-center">
     <Navbar class="w-full fixed top-0 left-0 z-50" />
 
-    <main class="pt-28 p-4">
-      <h1 class="text-2xl font-bold mb-4">Tus gastos</h1>
+    <main class="w-full pt-20 p-3 md:pt-28 md:p-4">
+      <h1 class="text-xl md:text-2xl font-bold mb-4">Tus gastos</h1>
 
       <div>
-        <form @submit.prevent="crear" class="flex flex-wrap items-center gap-2">
+        <form @submit.prevent="crear" class="flex flex-col md:flex-row md:flex-wrap items-stretch md:items-center gap-2">
           <input 
             v-model="gasto.concepto" 
             type="text" 
             placeholder="Concepto" 
-            class="mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
+            class="w-full md:w-auto mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
           />
           <input 
             v-model.number="gasto.importe" 
             type="number" 
             step="0.01"
             placeholder="Importe" 
-            class="mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
+            class="w-full md:w-auto mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
           />
           <input 
             v-model="gasto.fecha" 
             type="date" 
-            class="mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
+            class="w-full md:w-auto mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
           />
           <select 
             v-model.number="gasto.categoria.id" 
-            class="mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
+            class="w-full md:w-auto mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
           >
             <option 
               v-for="cat in categoriaStore.categorias" 
@@ -38,15 +38,15 @@
           </select>
           <button 
             type="submit" 
-            class="text-white bg-indigo-500 hover:bg-indigo-600 focus:ring-4 focus:ring-indigo-500/20 shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none"
+            class="w-full md:w-auto text-white bg-indigo-500 hover:bg-indigo-600 focus:ring-4 focus:ring-indigo-500/20 shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none mt-2 md:mt-0"
           >
             Crear
           </button>
         </form>
       </div>
 
-      <div class="pt-10 p-4">
-        <h2 class="text-xl font-bold text-indigo-400 mb-4">Más recientes</h2>
+      <div class="pt-8 md:pt-10 p-2 md:p-4 overflow-x-auto">
+        <h2 class="text-lg md:text-xl font-bold text-indigo-400 mb-4">Más recientes</h2>
           <CustomTable 
             :headers="['Fecha', 'Concepto', 'Importe', 'Categoría']"
             :cols="['fecha', 'concepto', 'importe', 'categoria']"
