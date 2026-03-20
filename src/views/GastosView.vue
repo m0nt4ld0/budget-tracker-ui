@@ -3,7 +3,7 @@
     <Navbar class="w-full fixed top-0 left-0 z-50" />
 
     <main class="pt-28 p-4">
-      <h1 class="text-xl font-bold mb-4">Tus gastos</h1>
+      <h1 class="text-2xl font-bold mb-4">Tus gastos</h1>
 
       <div>
         <form @submit.prevent="crear" class="flex flex-wrap items-center gap-2">
@@ -16,6 +16,7 @@
           <input 
             v-model.number="gasto.importe" 
             type="number" 
+            step="0.01"
             placeholder="Importe" 
             class="mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
           />
@@ -44,6 +45,30 @@
         </form>
       </div>
 
+      <div class="pt-10 p-4">
+        <h2 class="text-xl font-bold text-indigo-400 mb-4">Más recientes</h2>
+          <CustomTable 
+            :headers="['Fecha', 'Concepto', 'Importe', 'Categoría']"
+            :cols="['fecha', 'concepto', 'importe', 'categoria']"
+            :rows="filtrados"
+          >
+            <template #fecha="{ row }">
+              {{ formatDate(row.fecha) }}
+            </template>
+            <template #importe="{ row }">
+              {{ formatARS(row.importe) }}
+            </template>
+            <template #categoria="{ row }">
+              {{ row.categoria.categoria }}
+            </template>
+          </CustomTable>
+
+          <Pagination
+            :currentPage="store.page"
+            :totalPages="store.totalPages"
+            @change-page="changePage"
+          />
+      </div>
       <GastosPorCategoriaChart class="mt-6" />
 
       <Filters
@@ -51,27 +76,6 @@
         @update:selected="filtrarPorCategorias"
       />
 
-      <CustomTable 
-        :headers="['Fecha', 'Concepto', 'Importe', 'Categoría']"
-        :cols="['fecha', 'concepto', 'importe', 'categoria']"
-        :rows="filtrados"
-      >
-        <template #fecha="{ row }">
-          {{ formatDate(row.fecha) }}
-        </template>
-        <template #importe="{ row }">
-          {{ formatARS(row.importe) }}
-        </template>
-        <template #categoria="{ row }">
-          {{ row.categoria.categoria }}
-        </template>
-      </CustomTable>
-
-      <Pagination
-        :currentPage="store.page"
-        :totalPages="store.totalPages"
-        @change-page="changePage"
-      />
     </main>
   </div>
 </template>
@@ -114,7 +118,7 @@ export default defineComponent({
 
     const gasto = reactive<GastoDto>({
       concepto: "",
-      importe: 0,
+      importe: 0.0,
       fecha: new Date().toISOString().split("T")[0],
       categoria: { id: 0, categoria: "" },
     });
@@ -134,7 +138,7 @@ export default defineComponent({
       if (!gasto.concepto || gasto.importe <= 0 || gasto.categoria.id <= 0) return;
       await store.crearGasto({ ...gasto });
       gasto.concepto = "";
-      gasto.importe = 0;
+      gasto.importe = 0.0;
       gasto.fecha = new Date().toISOString().split("T")[0];
       gasto.categoria.id = 0;
       await store.fetchGastos();

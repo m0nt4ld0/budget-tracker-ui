@@ -6,7 +6,7 @@ export const useGastoStore = defineStore("gasto", {
   state: () => ({
     gastos: [] as GastoDto[],
     page: 0,
-    size: 10,
+    size: 5,
     totalPages: 0,
 
     totalesPorCategoria: {} as Record<string, number>,
