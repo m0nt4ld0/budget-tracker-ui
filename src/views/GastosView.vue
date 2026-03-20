@@ -138,10 +138,18 @@ export default defineComponent({
       if (!gasto.concepto || gasto.importe <= 0 || gasto.categoria.id <= 0) return;
       await store.crearGasto({ ...gasto });
       gasto.concepto = "";
-      gasto.importe = 0.0;
+      gasto.importe = 0;
       gasto.fecha = new Date().toISOString().split("T")[0];
       gasto.categoria.id = 0;
-      await store.fetchGastos();
+
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+
+      await Promise.all([
+        store.fetchGastos(),
+        store.fetchTotalesPorCategoria(`${year}-${month}-01`, `${year}-${month}-31`)
+      ]);
     };
 
     const changePage = (page: number) => {
