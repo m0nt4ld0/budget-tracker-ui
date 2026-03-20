@@ -44,7 +44,7 @@ const chartOptions = computed(() => ({
 <template>
   <div class="bg-white p-4 rounded shadow">
     <h2 class="text-lg font-semibold mb-4">
-      Gastos del mes por categoría
+      Gastos de este mes por categoría
     </h2>
 
     <div v-if="series.length === 0" class="text-gray-500 text-center">

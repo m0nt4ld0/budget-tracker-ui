@@ -2,7 +2,7 @@
   <div class="bg-gray-100 mx-auto flex flex-wrap items-center justify-center">
     <Navbar class="w-full fixed top-0 left-0 z-50" />
 
-    <main class="w-full pt-20 p-3 md:pt-28 md:p-4">
+    <main class="w-full max-w-screen-xl items-center justify-between pt-20 p-3 md:pt-28 md:p-4">
       <h1 class="text-xl md:text-2xl font-bold mb-4">Tus gastos</h1>
 
       <div>
@@ -45,30 +45,26 @@
         </form>
       </div>
 
+      <!-- Primera tabla: siempre 5 items fijos -->
       <div class="pt-8 md:pt-10 p-2 md:p-4 overflow-x-auto">
-        <h2 class="text-lg md:text-xl font-bold text-indigo-400 mb-4">Más recientes</h2>
-          <CustomTable 
-            :headers="['Fecha', 'Concepto', 'Importe', 'Categoría']"
-            :cols="['fecha', 'concepto', 'importe', 'categoria']"
-            :rows="filtrados"
-          >
-            <template #fecha="{ row }">
-              {{ formatDate(row.fecha) }}
-            </template>
-            <template #importe="{ row }">
-              {{ formatARS(row.importe) }}
-            </template>
-            <template #categoria="{ row }">
-              {{ row.categoria.categoria }}
-            </template>
-          </CustomTable>
-
-          <Pagination
-            :currentPage="store.page"
-            :totalPages="store.totalPages"
-            @change-page="changePage"
-          />
+        <h2 class="text-lg md:text-xl font-bold text-indigo-400 mb-4">Tus últimos gastos</h2>
+        <CustomTable 
+          :headers="['Fecha', 'Concepto', 'Importe', 'Categoría']"
+          :cols="['fecha', 'concepto', 'importe', 'categoria']"
+          :rows="ultimos5"
+        >
+          <template #fecha="{ row }">
+            {{ formatDate(row.fecha) }}
+          </template>
+          <template #importe="{ row }">
+            {{ formatARS(row.importe) }}
+          </template>
+          <template #categoria="{ row }">
+            {{ row.categoria.categoria }}
+          </template>
+        </CustomTable>
       </div>
+
       <GastosPorCategoriaChart class="mt-6" />
 
       <Filters
@@ -76,13 +72,52 @@
         @update:selected="filtrarPorCategorias"
       />
 
+      <div class="pt-8 md:pt-10 p-2 md:p-4 overflow-x-auto">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
+          <h2 class="text-lg md:text-xl font-bold text-indigo-400">Todos tus gastos</h2>
+          <div class="flex items-center gap-2">
+            <label class="text-sm text-gray-600 whitespace-nowrap">Ítems por página:</label>
+            <select
+              v-model.number="pageSize"
+              @change="changePageSize"
+              class="rounded-md bg-white border border-gray-400/20 px-3 py-1.5 text-gray-900 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
+            >
+              <option :value="10">10</option>
+              <option :value="25">25</option>
+              <option :value="50">50</option>
+              <option :value="100">100</option>
+            </select>
+          </div>
+        </div>
+        <CustomTable 
+          :headers="['Fecha', 'Concepto', 'Importe', 'Categoría']"
+          :cols="['fecha', 'concepto', 'importe', 'categoria']"
+          :rows="filtrados"
+        >
+          <template #fecha="{ row }">
+            {{ formatDate(row.fecha) }}
+          </template>
+          <template #importe="{ row }">
+            {{ formatARS(row.importe) }}
+          </template>
+          <template #categoria="{ row }">
+            {{ row.categoria.categoria }}
+          </template>
+        </CustomTable>
+        <Pagination
+          :currentPage="store.page"
+          :totalPages="store.totalPages"
+          @change-page="changePage"
+        />
+      </div>
+
     </main>
   </div>
 </template>
 
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted } from "vue";
+import { defineComponent, reactive, onMounted, computed, ref } from "vue";
 import { useGastoStore } from "../stores/useGastoStore";
 import { useCategoriaStore } from "../stores/useCategoriaStore";
 import type { GastoDto } from "../types/types";
@@ -90,9 +125,8 @@ import CustomTable from "../components/CustomTable.vue";
 import Pagination from "../components/Pagination.vue";
 import { formatARS, formatDate } from "../composables/useUtils";
 import GastosPorCategoriaChart from "../components/GastosPorCategoriaChart.vue";
-import { authApi, gastoApi, categoriaApi } from "../api/api";
+import { authApi } from "../api/api";
 import Navbar from "../components/Navbar.vue";
-import { ref, computed } from "vue";
 import Filters from "../components/Filters.vue";
 
 
@@ -101,20 +135,23 @@ export default defineComponent({
   setup() {
     const store = useGastoStore();
     const categoriaStore = useCategoriaStore();
-    
 
     const categoriasSeleccionadas = ref<number[]>([]);
+    const pageSize = ref<number>(10);
 
     const filtrados = computed(() => {
-        if (!categoriasSeleccionadas.value.length) return store.gastos;
-        return store.gastos.filter((g) =>
-          categoriasSeleccionadas.value.includes(g.categoria.id)
-        );
-      });
+      if (!categoriasSeleccionadas.value.length) return store.gastos;
+      return store.gastos.filter((g) =>
+        categoriasSeleccionadas.value.includes(g.categoria.id)
+      );
+    });
 
-      const filtrarPorCategorias = (ids: number[]) => {
-        categoriasSeleccionadas.value = ids;
-      };
+    // Primera tabla: siempre los primeros 5 del listado actual
+    const ultimos5 = computed(() => store.gastos.slice(0, 5));
+
+    const filtrarPorCategorias = (ids: number[]) => {
+      categoriasSeleccionadas.value = ids;
+    };
 
     const gasto = reactive<GastoDto>({
       concepto: "",
@@ -158,13 +195,34 @@ export default defineComponent({
       store.fetchGastos();
     };
 
+    const changePageSize = async () => {
+      store.size = pageSize.value;
+      store.page = 0;
+      await store.fetchGastos();
+    };
+
     onMounted(async () => {
       await login();
+      store.size = pageSize.value;
       await store.fetchGastos();
       await categoriaStore.fetchCategorias();
     });
 
-    return { store, categoriaStore, gasto, crear, changePage, formatARS, formatDate, login, filtrados, filtrarPorCategorias };
+    return { 
+      store, 
+      categoriaStore, 
+      gasto, 
+      crear, 
+      changePage,
+      changePageSize,
+      formatARS, 
+      formatDate, 
+      login, 
+      filtrados,
+      ultimos5,
+      filtrarPorCategorias,
+      pageSize,
+    };
   },
 });
 </script>
