@@ -1,6 +1,10 @@
 <template>
   <Layout>
-    <h1 class="text-xl md:text-2xl font-bold mb-4">Tus gastos</h1>
+    <h1 
+      class="text-xl md:text-2xl font-bold mb-4"
+    >
+      Hola, <strong class="text-xl md:text-2xl font-bold text-indigo-400 mb-4">{{ userStore.nombre }}</strong>
+    </h1>
 
     <div>
       <form @submit.prevent="crear" class="flex flex-col md:flex-row md:flex-wrap items-stretch md:items-center gap-2">
@@ -42,7 +46,6 @@
         </form>
       </div>
 
-      <!-- Primera tabla: siempre 5 items fijos -->
       <div class="pt-8 md:pt-10 p-2 md:p-4 overflow-x-auto">
         <h2 class="text-lg md:text-xl font-bold text-indigo-400 mb-4">Tus últimos gastos</h2>
         <CustomTable 
@@ -124,13 +127,14 @@ import GastosPorCategoriaChart from "../components/GastosPorCategoriaChart.vue";
 import { authApi } from "../api/api";
 import Filters from "../components/Filters.vue";
 import Layout from "@/views/Layout.vue";
-
+import { useUserStore } from "@/stores/useUserStore";
 
 export default defineComponent({
   components: { CustomTable, Pagination, GastosPorCategoriaChart, Filters, Layout },
   setup() {
     const store = useGastoStore();
     const categoriaStore = useCategoriaStore();
+    const userStore = useUserStore();
 
     const categoriasSeleccionadas = ref<number[]>([]);
     const pageSize = ref<number>(10);
@@ -207,6 +211,7 @@ export default defineComponent({
     return { 
       store, 
       categoriaStore, 
+      userStore,
       gasto, 
       crear, 
       changePage,

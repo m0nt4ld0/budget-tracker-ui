@@ -1,8 +1,6 @@
 <template>
-  <div class="bg-gray-100 mx-auto flex flex-wrap items-center justify-center">
-    <Navbar class="w-full fixed top-0 left-0 z-50" />
-
-    <main class="pt-28 p-4">
+<!-- <div class="bg-gray-100 mx-auto flex flex-wrap items-center justify-center"> -->
+    <Layout>
       <h1 class="text-xl font-bold mb-4">Categorías</h1>
 
       <form @submit.prevent="crear" class="flex flex-wrap items-center gap-2 mb-6">
@@ -32,8 +30,7 @@
           />
         </template>
       </CustomTable>
-    </main>
-  </div>
+    </Layout>
 </template>
 
 <script lang="ts">
@@ -43,12 +40,14 @@ import CustomTable from "../components/CustomTable.vue";
 import type { CategoriaDto } from "../types/types";
 import { heroIcons, defaultIcon } from "@/icons/heroIcons";
 import Navbar from "../components/Navbar.vue";
+import Layout from "@/views/Layout.vue";
 
 export default defineComponent({
   name: "CategoriasView",
   components: {
     CustomTable,
     Navbar,
+    Layout,
   },
   setup() {
     const store = useCategoriaStore();
