@@ -6,47 +6,9 @@
       Hola, <strong class="text-xl md:text-2xl font-bold text-indigo-400 mb-4">{{ userStore.nombre }}</strong>
     </h1>
 
-    <div>
-      <form @submit.prevent="crear" class="flex flex-col md:flex-row md:flex-wrap items-stretch md:items-center gap-2">
-        <input 
-            v-model="gasto.concepto" 
-            type="text" 
-            placeholder="Concepto" 
-            class="w-full md:w-auto mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
-          />
-          <input 
-            v-model.number="gasto.importe" 
-            type="number" 
-            step="0.01"
-            placeholder="Importe" 
-            class="w-full md:w-auto mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
-          />
-          <input 
-            v-model="gasto.fecha" 
-            type="date" 
-            class="w-full md:w-auto mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
-          />
-          <select 
-            v-model.number="gasto.categoria.id" 
-            class="w-full md:w-auto mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
-          >
-            <option 
-              v-for="cat in categoriaStore.categorias" 
-              :key="cat.id" 
-              :value="cat.id">
-              {{ cat.categoria }}
-            </option>
-          </select>
-          <button 
-            type="submit" 
-            class="w-full md:w-auto text-white bg-indigo-500 hover:bg-indigo-600 focus:ring-4 focus:ring-indigo-500/20 shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none mt-2 md:mt-0"
-          >
-            Crear
-          </button>
-        </form>
-      </div>
+    <FormCargarGasto />
 
-      <div class="pt-8 md:pt-10 p-2 md:p-4 overflow-x-auto">
+    <div class="pt-8 md:pt-10 p-2 md:p-4 overflow-x-auto">
         <h2 class="text-lg md:text-xl font-bold text-indigo-400 mb-4">Tus últimos gastos</h2>
         <CustomTable 
           :headers="['Fecha', 'Concepto', 'Importe', 'Categoría']"
@@ -63,16 +25,16 @@
             {{ row.categoria.categoria }}
           </template>
         </CustomTable>
-      </div>
+    </div>
 
-      <GastosPorCategoriaChart class="mt-6" />
+    <GastosPorCategoriaChart class="mt-6" />
 
-      <Filters
-        :categorias="categoriaStore.categorias"
-        @update:selected="filtrarPorCategorias"
-      />
+    <Filters
+      :categorias="categoriaStore.categorias"
+      @update:selected="filtrarPorCategorias"
+    />
 
-      <div class="pt-8 md:pt-10 p-2 md:p-4 overflow-x-auto">
+    <div class="pt-8 md:pt-10 p-2 md:p-4 overflow-x-auto">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
           <h2 class="text-lg md:text-xl font-bold text-indigo-400">Todos tus gastos</h2>
           <div class="flex items-center gap-2">
@@ -109,9 +71,9 @@
           :totalPages="store.totalPages"
           @change-page="changePage"
         />
-      </div>
+    </div>
 
-    </Layout>
+  </Layout>
 </template>
 
 
@@ -128,9 +90,10 @@ import { authApi } from "../api/api";
 import Filters from "../components/Filters.vue";
 import Layout from "@/views/Layout.vue";
 import { useUserStore } from "@/stores/useUserStore";
+import FormCargarGasto from "../components/FormCargarGasto.vue";
 
 export default defineComponent({
-  components: { CustomTable, Pagination, GastosPorCategoriaChart, Filters, Layout },
+  components: { CustomTable, Pagination, GastosPorCategoriaChart, Filters, Layout, FormCargarGasto },
   setup() {
     const store = useGastoStore();
     const categoriaStore = useCategoriaStore();
@@ -170,24 +133,6 @@ export default defineComponent({
         console.error("Login failed:", error);
       }
     };
-    
-    const crear = async () => {
-      if (!gasto.concepto || gasto.importe <= 0 || gasto.categoria.id <= 0) return;
-      await store.crearGasto({ ...gasto });
-      gasto.concepto = "";
-      gasto.importe = 0;
-      gasto.fecha = new Date().toISOString().split("T")[0];
-      gasto.categoria.id = 0;
-
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, "0");
-
-      await Promise.all([
-        store.fetchGastos(),
-        store.fetchTotalesPorCategoria(`${year}-${month}-01`, `${year}-${month}-31`)
-      ]);
-    };
 
     const changePage = (page: number) => {
       if (page < 0 || page >= store.totalPages) return;
@@ -212,8 +157,6 @@ export default defineComponent({
       store, 
       categoriaStore, 
       userStore,
-      gasto, 
-      crear, 
       changePage,
       changePageSize,
       formatARS, 
