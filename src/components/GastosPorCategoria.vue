@@ -10,7 +10,7 @@
       <!-- Total del mes -->
       <div>
         <p class="text-sm text-gray-500 uppercase tracking-wide mb-1">Gastaste este mes</p>
-        <p class="text-3xl font-bold text-indigo-600">{{ formatARS(totalMes) }}</p>
+        <p class="text-3xl font-bold text-indigo-600">{{ formatARS(animatedTotal) }}</p>
       </div>
 
       <!-- Top 3 -->
@@ -27,13 +27,13 @@
           <div class="flex items-center gap-2">
             <span class="text-gray-400 text-sm w-4">{{ index + 1 }}°</span>
             <component
-                :is="item.icono"
-                class="w-5 h-5 text-indigo-400 shrink-0"
+              :is="item.icono"
+              class="w-5 h-5 text-indigo-400 shrink-0"
             />
             <span :class="labelClass(index)">{{ item.categoria }}</span>
           </div>
           <span :class="labelClass(index)" class="font-semibold text-indigo-500">
-            {{ formatARS(item.total) }}
+            {{ formatARS(top3Totals[index]) }}
           </span>
         </div>
       </div>
@@ -49,6 +49,7 @@ import { useCategoriaStore } from "@/stores/useCategoriaStore";
 import { formatARS } from "@/composables/useUtils";
 import { heroIcons, defaultIcon } from "@/icons/heroIcons";
 import GastosPorCategoriaChart from "./GastosPorCategoriaChart.vue";
+import { useCountUp } from "@/composables/useCountUp";
 
 export default defineComponent({
   name: "GastosPorCategoria",
@@ -62,24 +63,39 @@ export default defineComponent({
     );
 
     const top3 = computed(() =>
-    Object.entries(store.totalesPorCategoria)
+      Object.entries(store.totalesPorCategoria)
         .map(([nombreCategoria, total]) => {
-        const cat = categoriaStore.categorias.find(c => c.categoria === nombreCategoria);
-        return {
+          const cat = categoriaStore.categorias.find(c => c.categoria === nombreCategoria);
+          return {
             categoria: nombreCategoria,
             total,
             icono: cat?.icono ? (heroIcons[cat.icono] ?? defaultIcon) : defaultIcon,
-        };
+          };
         })
         .sort((a, b) => b.total - a.total)
         .slice(0, 3)
     );
+
+    const animatedTotal = useCountUp(() => totalMes.value);
+
+    const top3Totals = [
+      useCountUp(computed(() => top3.value[0]?.total ?? 0)),
+      useCountUp(computed(() => top3.value[1]?.total ?? 0)),
+      useCountUp(computed(() => top3.value[2]?.total ?? 0)),
+    ];
+
     const labelClass = (index: number) => {
       const sizes = ["text-2xl font-bold", "text-xl font-semibold", "text-lg font-medium"];
       return sizes[index] ?? "text-base";
     };
 
-    return { totalMes, top3, labelClass, formatARS, categoriaStore };
+    return {
+      top3,
+      labelClass,
+      formatARS,
+      animatedTotal: computed(() => animatedTotal.value),
+      top3Totals: computed(() => top3Totals.map(t => t.value)),
+    };
   },
 });
 </script>

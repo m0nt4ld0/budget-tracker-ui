@@ -34,7 +34,6 @@
   </Layout>
 </template>
 
-
 <script lang="ts">
 import { defineComponent, reactive, onMounted, computed, ref } from "vue";
 import { useGastoStore } from "../stores/useGastoStore";
