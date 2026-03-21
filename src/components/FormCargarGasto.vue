@@ -64,7 +64,12 @@
         </form>
       </div>
     </transition>
-
+    <AppModal
+      v-model="modal.visible"
+      :type="modal.type"
+      :titulo="modal.titulo"
+      :mensaje="modal.mensaje"
+      />
   </div>
 </template>
 
@@ -74,9 +79,13 @@ import { useGastoStore } from "../stores/useGastoStore";
 import { useCategoriaStore } from "../stores/useCategoriaStore";
 import type { GastoDto } from "../types/types";
 import { PlusCircleIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/vue/24/solid";
+import AppModal, { type ModalType } from "./AppModal.vue"; 
 
 export default defineComponent({
   name: "FormCargarGasto",
+  components: {
+    AppModal,
+  },
   setup() {
     const store = useGastoStore();
     const categoriaStore = useCategoriaStore();
@@ -92,6 +101,20 @@ export default defineComponent({
       }, 500);
     };
 
+    const modal = reactive({
+      visible: false,
+      type: "info" as ModalType,
+      titulo: "",
+      mensaje: "",
+    });
+
+    const mostrarModal = (type: ModalType, titulo: string, mensaje: string) => {
+      modal.type = type;
+      modal.titulo = titulo;
+      modal.mensaje = mensaje;
+      modal.visible = true;
+    };
+
     const gasto = reactive<GastoDto>({
       concepto: "",
       importe: 0.0,
@@ -102,20 +125,28 @@ export default defineComponent({
     const crear = async () => {
       if (!gasto.concepto || gasto.importe <= 0 || gasto.categoria.id <= 0) return;
 
-      await store.crearGasto({ ...gasto });
-      gasto.concepto = "";
-      gasto.importe = 0;
-      gasto.fecha = new Date().toISOString().split("T")[0];
-      gasto.categoria.id = 0;
+      try {
+        await store.crearGasto({ ...gasto });
+        gasto.concepto = "";
+        gasto.importe = 0;
+        gasto.fecha = new Date().toISOString().split("T")[0];
+        gasto.categoria.id = 0;
 
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, "0");
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
 
-      await Promise.all([
-        store.fetchGastos(),
-        store.fetchTotalesPorCategoria(`${year}-${month}-01`, `${year}-${month}-31`),
-      ]);
+        await Promise.all([
+          store.fetchGastos(),
+          store.fetchTotalesPorCategoria(`${year}-${month}-01`, `${year}-${month}-31`),
+        ]);
+
+        mostrarModal("info", "Gasto creado", "El gasto se registró correctamente.");
+
+      } catch (error: any) {
+        const mensaje = error?.response?.data?.message ?? "Ocurrió un error inesperado.";
+        mostrarModal("error", "No se pudo crear el gasto", mensaje);
+      }
     };
 
     return {
@@ -128,6 +159,8 @@ export default defineComponent({
       PlusCircleIcon,
       ChevronDownIcon,
       XMarkIcon,
+      modal,
+      mostrarModal,
     };
   },
 });
