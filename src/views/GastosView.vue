@@ -7,6 +7,7 @@
     </h1>
 
     <FormCargarGasto />
+    <GastosPorCategoria class="mt-6" />
 
     <div class="pt-8 md:pt-10 p-2 md:p-4 overflow-x-auto">
         <h2 class="text-lg md:text-xl font-bold text-indigo-400 mb-4">Tus últimos gastos</h2>
@@ -26,8 +27,6 @@
           </template>
         </CustomTable>
     </div>
-
-    <GastosPorCategoriaChart class="mt-6" />
 
     <Filters
       :categorias="categoriaStore.categorias"
@@ -85,7 +84,7 @@ import type { GastoDto } from "../types/types";
 import CustomTable from "../components/CustomTable.vue";
 import Pagination from "../components/Pagination.vue";
 import { formatARS, formatDate } from "../composables/useUtils";
-import GastosPorCategoriaChart from "../components/GastosPorCategoriaChart.vue";
+import GastosPorCategoria from "../components/GastosPorCategoria.vue";
 import { authApi } from "../api/api";
 import Filters from "../components/Filters.vue";
 import Layout from "@/views/Layout.vue";
@@ -93,7 +92,7 @@ import { useUserStore } from "@/stores/useUserStore";
 import FormCargarGasto from "../components/FormCargarGasto.vue";
 
 export default defineComponent({
-  components: { CustomTable, Pagination, GastosPorCategoriaChart, Filters, Layout, FormCargarGasto },
+  components: { CustomTable, Pagination, Filters, Layout, FormCargarGasto, GastosPorCategoria },
   setup() {
     const store = useGastoStore();
     const categoriaStore = useCategoriaStore();
@@ -109,7 +108,6 @@ export default defineComponent({
       );
     });
 
-    // Primera tabla: siempre los primeros 5 del listado actual
     const ultimos5 = computed(() => store.gastos.slice(0, 5));
 
     const filtrarPorCategorias = (ids: number[]) => {
