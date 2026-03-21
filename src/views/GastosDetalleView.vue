@@ -97,17 +97,6 @@ export default defineComponent({
       categoria: { id: 0, categoria: "" },
     });
 
-    const login = async () => {
-      try {
-        const response = await authApi.login({ username: "mmontaldo" });
-        if (response && typeof response === "string") {
-          localStorage.setItem("token", response);
-        }
-      } catch (error) {
-        console.error("Login failed:", error);
-      }
-    };
-
     const changePage = (page: number) => {
       if (page < 0 || page >= store.totalPages) return;
       store.page = page;
@@ -121,7 +110,6 @@ export default defineComponent({
     };
 
     onMounted(async () => {
-      await login();
       store.size = pageSize.value;
       await store.fetchGastos();
       await categoriaStore.fetchCategorias();
@@ -135,7 +123,6 @@ export default defineComponent({
       changePageSize,
       formatARS, 
       formatDate, 
-      login, 
       filtrados,
       ultimos5,
       filtrarPorCategorias,

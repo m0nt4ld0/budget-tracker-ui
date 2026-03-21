@@ -81,8 +81,8 @@ export default defineComponent({
     const store = useGastoStore();
     const categoriaStore = useCategoriaStore();
 
-    const visible = ref(true);
-    const animating = ref(false);
+    const visible = ref(false);
+    const animating = ref(true);
 
     const toggle = () => {
       animating.value = true;

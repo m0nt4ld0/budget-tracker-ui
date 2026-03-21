@@ -15,7 +15,7 @@
 
       <!-- Top 3 -->
       <div>
-        <p class="text-sm text-gray-500 uppercase tracking-wide mb-3">Tus 3 mayores gastos</p>
+        <p class="text-sm text-gray-500 uppercase tracking-wide mb-3">Tus 3 mayores gastos este mes</p>
         <div v-if="top3.length === 0" class="text-gray-400 text-sm">
           Sin datos este mes
         </div>

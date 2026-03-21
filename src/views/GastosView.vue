@@ -44,7 +44,6 @@ import CustomTable from "../components/CustomTable.vue";
 import Pagination from "../components/Pagination.vue";
 import { formatARS, formatDate } from "../composables/useUtils";
 import GastosPorCategoria from "../components/GastosPorCategoria.vue";
-import { authApi } from "../api/api";
 import Layout from "@/views/Layout.vue";
 import { useUserStore } from "@/stores/useUserStore";
 import FormCargarGasto from "../components/FormCargarGasto.vue";
@@ -69,17 +68,6 @@ export default defineComponent({
       categoria: { id: 0, categoria: "" },
     });
 
-    const login = async () => {
-      try {
-        const response = await authApi.login({ username: "mmontaldo" });
-        if (response && typeof response === "string") {
-          localStorage.setItem("token", response);
-        }
-      } catch (error) {
-        console.error("Login failed:", error);
-      }
-    };
-
     const changePage = (page: number) => {
       if (page < 0 || page >= store.totalPages) return;
       store.page = page;
@@ -87,7 +75,6 @@ export default defineComponent({
     };
 
     onMounted(async () => {
-      await login();
       await store.fetchGastos();
       await categoriaStore.fetchCategorias();
     });
@@ -99,7 +86,6 @@ export default defineComponent({
       changePage,
       formatARS, 
       formatDate, 
-      login, 
       filtrados,
       ultimos5,
     };
