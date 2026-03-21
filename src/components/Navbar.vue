@@ -88,7 +88,7 @@ export default defineComponent({
                 <router-link 
                   to="/categorias" 
                   class="flex items-center w-full p-2 hover:bg-indigo-500/30 rounded">
-                  Categorías
+                  Configuración
                 </router-link>
               </li>
               <li>

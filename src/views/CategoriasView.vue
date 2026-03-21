@@ -1,7 +1,7 @@
 <template>
 <!-- <div class="bg-gray-100 mx-auto flex flex-wrap items-center justify-center"> -->
     <Layout>
-      <h1 class="text-xl font-bold mb-4">Categorías</h1>
+      <h1 class="text-xl font-bold mb-4">Administrar Categorías</h1>
 
       <form @submit.prevent="crear" class="flex flex-wrap items-center gap-2 mb-6">
         <input 

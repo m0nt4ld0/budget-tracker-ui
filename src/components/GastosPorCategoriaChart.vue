@@ -14,6 +14,7 @@ const fechaHasta = `${year}-${month}-31`;
 
 onMounted(async () => {
   await store.fetchTotalesPorCategoria(fechaDesde, fechaHasta);
+  await store.fetchTotalesMesAnterior(); 
 });
 
 const labels = computed(() =>

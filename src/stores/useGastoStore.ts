@@ -10,6 +10,7 @@ export const useGastoStore = defineStore("gasto", {
     totalPages: 0,
 
     totalesPorCategoria: {} as Record<string, number>,
+    totalesPorCategoriaAnterior: {} as Record<string, number>,
   }),
 
   actions: {
@@ -17,6 +18,15 @@ export const useGastoStore = defineStore("gasto", {
       const response = await gastoApi.getGastos(this.page, this.size);
       this.gastos = response.content;
       this.totalPages = Math.ceil(response.totalElements / this.size);
+    },
+
+    async fetchTotalesMesAnterior() {
+      const now = new Date();
+      const primerDia = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const ultimoDia = new Date(now.getFullYear(), now.getMonth(), 0);
+      const fmt = (d: Date) => d.toISOString().split("T")[0];
+      this.totalesPorCategoriaAnterior =
+        await gastoApi.getTotalesPorCategoria(fmt(primerDia), fmt(ultimoDia));
     },
 
     async fetchTotalesPorCategoria(
