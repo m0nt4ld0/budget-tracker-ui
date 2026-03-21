@@ -65,7 +65,7 @@ import { authApi } from "../api/api";
 import Filters from "../components/Filters.vue";
 import Layout from "@/views/Layout.vue";
 import { useUserStore } from "@/stores/useUserStore";
-import FormCargarGasto from "../components/FormCargarGasto.vue";
+import FormCargarGasto from "../components/FormCargarMovimiento.vue";
 
 export default defineComponent({
   components: { CustomTable, Pagination, Filters, Layout, FormCargarGasto },

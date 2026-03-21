@@ -1,9 +1,21 @@
 import type { HeroIconName } from "@/icons/heroIcons";
 
+export type TipoMovimiento = "EGRESO" | "INGRESO";
+
+export interface MovimientoDto {
+  id?: number;
+  fecha: string;
+  categoria: CategoriaDto;
+  concepto: string;
+  importe: number;
+  tipoMovimiento: TipoMovimiento;
+}
+
 export interface CategoriaDto {
   id: number;
   categoria: string;
   icono: HeroIconName;
+  tipoMovimiento?: TipoMovimiento;
   activo?: boolean;
 }
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { CategoriaDto, GastoDto } from "../types/types";
+import type { CategoriaDto, GastoDto, MovimientoDto } from "../types/types";
 import type { AuthResponseDto } from "@/types/types";
 import { useUserStore } from "@/stores/useUserStore";
 
@@ -45,6 +45,13 @@ export const authApi = {
   async register(payload: { name: string; username: string }): Promise<AuthResponseDto> {
     const response = await api.post<AuthResponseDto>("/auth/register", payload);
     return response.data;
+  },
+};
+
+export const movimientoApi = {
+  crearMovimiento: async (dto: MovimientoDto) => {
+    const res = await api.post<MovimientoDto>("/movimientos/crear", dto);
+    return res.data;
   },
 };
 

@@ -45,7 +45,7 @@ import { formatARS, formatDate } from "../composables/useUtils";
 import GastosPorCategoria from "../components/GastosPorCategoria.vue";
 import Layout from "@/views/Layout.vue";
 import { useUserStore } from "@/stores/useUserStore";
-import FormCargarGasto from "../components/FormCargarGasto.vue";
+import FormCargarGasto from "../components/FormCargarMovimiento.vue";
 
 export default defineComponent({
   components: { CustomTable, Pagination,  Layout, FormCargarGasto, GastosPorCategoria },
