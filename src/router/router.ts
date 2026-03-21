@@ -2,6 +2,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import CategoriasView from "../views/CategoriasView.vue";
 import GastosView from "../views/GastosView.vue";
+import GastosDetalleView from "../views/GastosDetalleView.vue";
 import { useUserStore } from '@/stores/useUserStore'
 import LoginView from "@/views/LoginView.vue";
 
@@ -20,8 +21,14 @@ const routes = [
   },
   {
     path: "/dashboard",
-    name: "Gastos",
+    name: "Budget Tracker",
     component: GastosView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/gastos",
+    name: "Gastos - Detalle",
+    component: GastosDetalleView,
     meta: { requiresAuth: true },
   },
   {
