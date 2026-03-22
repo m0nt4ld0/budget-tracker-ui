@@ -101,3 +101,53 @@ El proyecto utiliza Tailwind CSS para los estilos. Se han definido variables de 
 - `--color-a`: Gris por defecto (#6b7280)
 - Estos colores se aplican a través de utilidades CSS personalizadas en el proyecto.
 - Se pueden sobrescribir en cualquier componente usando `style="--color-primary: #otrocolor;"` o en el root para todo el app.
+
+---
+<div align="center">
+
+# ¿Cómo usar Budget Tracker?
+
+En esta mini guía te muestro cómo empezar a cuidar tu salud financiera con esta aplicación.
+
+</div>
+
+---
+
+### 🔐 Login y registro
+
+Para empezar, creá tu cuenta con tu nombre, un usuario y tu email. Si ya tenés cuenta, ingresá directamente con tu usuario.
+
+<img width="1360" height="1077" alt="image" src="https://github.com/user-attachments/assets/f10e0ea2-2607-4580-a900-22361e1bc9e6" />
+<img width="1360" height="1077" alt="image" src="https://github.com/user-attachments/assets/6ecc2e67-8e20-41ae-b22d-b8b647aa3c36" />
+
+---
+
+### 📊 Dashboard: Control de tus finanzas personales
+
+Una vez que ingresás, el dashboard te da un pantallazo completo de tu situación financiera del mes:
+- **Gráfico de egresos por categoría** para visualizar en qué estás gastando más
+- **Total gastado este mes** y comparación con el mes anterior
+- **Top 3 de categorías** con mayor gasto
+- **Tabla de últimos movimientos** para un seguimiento rápido
+
+<img width="1360" height="1077" alt="image" src="https://github.com/user-attachments/assets/88eea987-7c42-4a7b-a633-7da731f61f46" />
+
+---
+
+### 💸 Registrar tus movimientos
+
+Cargá tus gastos e ingresos fácilmente desde el formulario. Podés indicar:
+- Si es un **egreso** (gasto) o un **ingreso**
+- El **concepto**, **importe** y **fecha**
+- La **moneda** (ARS, USD, etc.)
+- La **categoría** correspondiente
+
+<img width="1326" height="380" alt="image" src="https://github.com/user-attachments/assets/f111879c-32b6-4126-a547-9e440ce88513" />
+
+---
+
+### 👤 Tu perfil de usuario
+
+Desde tu perfil podés actualizar tu información personal: nombre, email, foto de perfil y contraseña. Tus cambios se reflejan de inmediato en toda la aplicación.
+
+<img width="1360" height="1077" alt="image" src="https://github.com/user-attachments/assets/1ee47664-26ce-48f7-bf19-b3994e36c60a" />
