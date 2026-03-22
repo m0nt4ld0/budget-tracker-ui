@@ -60,7 +60,7 @@ export default defineComponent({
             class="flex items-center p-1 rounded-full bg-indigo-500 hover:bg-indigo-400 focus:ring-2 focus:ring-indigo-300"
           >
             <img
-              :src="userStore.imagenUrl || '/default-avatar.png'"
+              :src="userStore.imagenUrl || '/assets/images/icons8-budget-94.png'"
               alt="Avatar"
               class="w-8 h-8 rounded-full"
             />
