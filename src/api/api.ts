@@ -5,7 +5,6 @@ import { useUserStore } from "@/stores/useUserStore";
 
 import type { InternalAxiosRequestConfig } from "axios";
 
-
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
 });
@@ -13,11 +12,9 @@ const api = axios.create({
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const userStore = useUserStore();
-
     if (userStore.token) {
       config.headers.Authorization = `Bearer ${userStore.token}`;
     }
-
     return config;
   },
   (error) => Promise.reject(error)
@@ -26,12 +23,17 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401 || error.response?.status === 403) {
+    const url = error.config?.url ?? "";
+    const esEndpointPublico = 
+      url.includes("/auth/") || 
+      url.includes("/user/register");
+
+    if (!esEndpointPublico && (error.response?.status === 401 || error.response?.status === 403)) {
       const userStore = useUserStore();
       userStore.logout();
-
       window.location.href = "/login";
     }
+
     return Promise.reject(error);
   }
 );
@@ -50,7 +52,19 @@ export const authApi = {
 
 export const movimientoApi = {
   crearMovimiento: async (dto: MovimientoDto) => {
-    const res = await api.post<MovimientoDto>("/movimientos/crear", dto);
+    const userStore = useUserStore();
+    const dtoConUsuario: MovimientoDto = {
+      ...dto,
+      usuario: {
+        id: userStore.id,
+        nombre: userStore.nombre,
+        usuario: userStore.username,
+        email: "",
+        imagenUrl: userStore.imagenUrl,
+        activo: userStore.activo,
+      },
+    };
+    const res = await api.post<MovimientoDto>("/movimientos/crear", dtoConUsuario);
     return res.data;
   },
 };
@@ -80,11 +94,12 @@ export const gastoApi = {
     fechaDesde?: string,
     fechaHasta?: string
   ) => {
+    const userStore = useUserStore();
     const res = await api.get<{
       content: GastoDto[];
       totalElements: number;
     }>("/gastos/", {
-      params: { page, size, fechaDesde, fechaHasta },
+      params: { page, size, fechaDesde, fechaHasta, usuarioId: userStore.id },
     });
     return res.data;
   },
@@ -95,10 +110,18 @@ export const gastoApi = {
   },
 
   getTotalesPorCategoria: async (fechaDesde: string, fechaHasta: string) => {
+    const userStore = useUserStore();
     const res = await api.get<Record<string, number>>(
       "/gastos/por-categoria",
-      { params: { fechaDesde, fechaHasta } }
+      { params: { fechaDesde, fechaHasta, usuarioId: userStore.id } }
     );
+    return res.data;
+  },
+};
+
+export const registerUserApi = {
+  register: async (dto: { nombre: string; usuario: string; email: string }) => {
+    const res = await api.post("/user/register", dto);
     return res.data;
   },
 };

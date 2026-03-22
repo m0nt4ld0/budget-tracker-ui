@@ -12,15 +12,10 @@
     <div class="flex-grow flex flex-col justify-center relative">
 
       <Transition name="slide-fade-left" mode="out-in">
-        <section
-          v-if="authStep === 'hero'"
-          key="hero"
-          class="flex flex-col justify-center min-h-[50vh] text-center"
-        >
+        <section v-if="authStep === 'hero'" key="hero" class="flex flex-col justify-center min-h-[50vh] text-center">
           <h1 class="mb-4 text-3xl sm:text-4xl md:text-5xl font-bold text-indigo-400 tracking-tight">
             Budget Tracker
           </h1>
-
           <div class="mb-6 h-6 overflow-hidden">
             <Transition name="phrase" mode="out-in">
               <p :key="currentPhrase" class="text-base sm:text-lg md:text-xl text-body">
@@ -28,20 +23,13 @@
               </p>
             </Transition>
           </div>
-
           <div class="flex flex-col sm:flex-row sm:justify-center gap-3 sm:gap-4">
-            <button
-              type="button"
-              @click="authStep = 'login'"
-              class="w-full sm:w-auto inline-flex justify-center items-center bg-indigo-500 text-white hover:bg-indigo-600 px-4 py-2 rounded-md font-medium"
-            >
+            <button type="button" @click="authStep = 'login'"
+              class="w-full sm:w-auto inline-flex justify-center items-center bg-indigo-500 text-white hover:bg-indigo-600 px-4 py-2 rounded-md font-medium">
               Iniciar sesión
             </button>
-            <button
-              type="button"
-              @click="authStep = 'register'"
-              class="w-full sm:w-auto bg-neutral-secondary-medium border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading px-4 py-2 rounded-md font-medium"
-            >
+            <button type="button" @click="authStep = 'register'"
+              class="w-full sm:w-auto bg-neutral-secondary-medium border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading px-4 py-2 rounded-md font-medium">
               Registrarse
             </button>
           </div>
@@ -49,57 +37,33 @@
       </Transition>
 
       <Transition name="slide-fade-left" mode="out-in">
-        <div
-          v-if="authStep === 'login'"
-          key="login"
-          class="flex justify-center items-center mt-4 sm:mt-6"
-        >
+        <div v-if="authStep === 'login'" key="login" class="flex justify-center items-center mt-4 sm:mt-6">
           <div class="w-full max-w-sm">
             <form @submit.prevent="handleLogin" class="space-y-4 sm:space-y-6">
               <h3 class="text-center text-2xl sm:text-3xl font-bold text-indigo-400 mb-4">
                 Qué bueno verte de nuevo
               </h3>
-
               <div>
                 <label class="block text-sm font-medium text-body">Usuario</label>
-                <input
-                  v-model="username"
-                  required
-                  autocomplete="username"
-                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
-                />
+                <input v-model="username" required autocomplete="username"
+                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none" />
               </div>
-
-              <button
-                type="submit"
-                class="w-full bg-indigo-500 hover:bg-indigo-400 text-white py-2 rounded-md font-semibold"
-              >
+              <button type="submit"
+                class="w-full bg-indigo-500 hover:bg-indigo-400 text-white py-2 rounded-md font-semibold">
                 Ingresar
               </button>
-
               <div class="flex justify-between items-center text-sm sm:text-base">
-                <button type="button" class="text-indigo-400 hover:underline" @click="authStep = 'hero'">
-                  ← Volver
-                </button>
-                <a href="#" @click.prevent="authStep = 'register'" class="text-indigo-400 hover:underline">
-                  Registrate
-                </a>
+                <button type="button" class="text-indigo-400 hover:underline" @click="authStep = 'hero'">← Volver</button>
+                <a href="#" @click.prevent="authStep = 'register'" class="text-indigo-400 hover:underline">Registrate</a>
               </div>
-
-              <p v-if="error" class="text-red-500 text-center mt-2">
-                {{ error }}
-              </p>
+              <p v-if="error" class="text-red-500 text-center mt-2">{{ error }}</p>
             </form>
           </div>
         </div>
       </Transition>
 
       <Transition name="slide-fade-left" mode="out-in">
-        <div
-          v-if="authStep === 'register'"
-          key="register"
-          class="flex justify-center items-center mt-4 sm:mt-6"
-        >
+        <div v-if="authStep === 'register'" key="register" class="flex justify-center items-center mt-4 sm:mt-6">
           <div class="w-full max-w-sm">
             <form @submit.prevent="handleRegister" class="space-y-4 sm:space-y-6">
               <h3 class="text-center text-2xl sm:text-3xl font-bold text-indigo-400 mb-4">
@@ -108,43 +72,33 @@
 
               <div>
                 <label class="block text-sm font-medium text-body">Nombre completo</label>
-                <input
-                  v-model="fullName"
-                  required
-                  autocomplete="name"
-                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
-                />
+                <input v-model="registerForm.nombre" required autocomplete="name"
+                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none" />
               </div>
 
               <div>
                 <label class="block text-sm font-medium text-body">Usuario</label>
-                <input
-                  v-model="username"
-                  required
-                  autocomplete="username"
-                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
-                />
+                <input v-model="registerForm.usuario" required autocomplete="username"
+                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none" />
               </div>
 
-              <button
-                type="submit"
-                class="w-full bg-indigo-500 hover:bg-indigo-400 text-white py-2 rounded-md font-semibold"
-              >
+              <div>
+                <label class="block text-sm font-medium text-body">Email</label>
+                <input v-model="registerForm.email" type="email" required autocomplete="email"
+                  class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none" />
+              </div>
+
+              <button type="submit"
+                class="w-full bg-indigo-500 hover:bg-indigo-400 text-white py-2 rounded-md font-semibold">
                 Registrarse
               </button>
 
               <div class="flex justify-between items-center text-sm sm:text-base">
-                <button type="button" class="text-indigo-400 hover:underline" @click="authStep = 'hero'">
-                  ← Volver
-                </button>
-                <a href="#" @click.prevent="authStep = 'login'" class="text-indigo-400 hover:underline">
-                  Entrá acá
-                </a>
+                <button type="button" class="text-indigo-400 hover:underline" @click="authStep = 'hero'">← Volver</button>
+                <a href="#" @click.prevent="authStep = 'login'" class="text-indigo-400 hover:underline">Entrá acá</a>
               </div>
 
-              <p v-if="error" class="text-red-500 text-center mt-2">
-                {{ error }}
-              </p>
+              <p v-if="error" class="text-red-500 text-center mt-2">{{ error }}</p>
             </form>
           </div>
         </div>
@@ -153,31 +107,53 @@
     </div>
 
     <Footer />
+
+    <AppModal
+      v-model="modal.visible"
+      :type="modal.type"
+      :titulo="modal.titulo"
+      :mensaje="modal.mensaje"
+      @update:modelValue="onModalCerrado"
+    />
+
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted, computed } from "vue";
-import { authApi } from "@/api/api";
+import { defineComponent, ref, reactive, onMounted, onUnmounted, computed } from "vue";
+import { authApi, registerUserApi } from "@/api/api";
 import router from "@/router/router";
 import { useUserStore } from "@/stores/useUserStore";
 import Footer from "@/components/Footer.vue";
+import AppModal, { type ModalType } from "@/components/AppModal.vue";
 
 export default defineComponent({
   name: "LoginView",
-  components: { Footer },
+  components: { Footer, AppModal },
   setup() {
     const username = ref("");
-    const fullName = ref("");
     const error = ref("");
     const authStep = ref<"hero" | "login" | "register">("hero");
+    const registroExitoso = ref(false);
+
+    const registerForm = reactive({
+      nombre: "",
+      usuario: "",
+      email: "",
+    });
+
+    const modal = reactive({
+      visible: false,
+      type: "info" as ModalType,
+      titulo: "",
+      mensaje: "",
+    });
 
     const phrases = [
       "Cuida tu salud financiera",
       "Ordena tus finanzas",
       "Te ayuda a controlar tus gastos",
     ];
-
     const phraseIndex = ref(0);
     const currentPhrase = computed(() => phrases[phraseIndex.value]);
 
@@ -187,10 +163,7 @@ export default defineComponent({
         phraseIndex.value = (phraseIndex.value + 1) % phrases.length;
       }, 2000);
     });
-
-    onUnmounted(() => {
-      clearInterval(interval);
-    });
+    onUnmounted(() => clearInterval(interval));
 
     const userStore = useUserStore();
 
@@ -208,15 +181,44 @@ export default defineComponent({
     const handleRegister = async () => {
       error.value = "";
       try {
-        const res = await authApi.register({ name: fullName.value, username: username.value });
-        userStore.login(res);
-        router.push("/dashboard");
+        await registerUserApi.register({
+          nombre: registerForm.nombre,
+          usuario: registerForm.usuario,
+          email: registerForm.email,
+        });
+
+        registroExitoso.value = true;
+        modal.type = "info";
+        modal.titulo = "¡Registro exitoso!";
+        modal.mensaje = `Bienvenido/a ${registerForm.nombre}. Ya podés iniciar sesión con tu usuario.`;
+        modal.visible = true;
+
       } catch (err: any) {
         error.value = err.response?.data?.message || err.message || "Error al registrarse";
       }
     };
 
-    return { username, fullName, error, authStep, handleLogin, handleRegister, currentPhrase };
+    const onModalCerrado = (visible: boolean) => {
+      if (!visible && registroExitoso.value) {
+        registroExitoso.value = false;
+        registerForm.nombre = "";
+        registerForm.usuario = "";
+        registerForm.email = "";
+        authStep.value = "login";
+      }
+    };
+
+    return {
+      username,
+      registerForm,
+      error,
+      authStep,
+      handleLogin,
+      handleRegister,
+      currentPhrase,
+      modal,
+      onModalCerrado,
+    };
   },
 });
 </script>
@@ -226,37 +228,30 @@ export default defineComponent({
 .slide-fade-left-leave-active {
   transition: all 0.4s ease;
 }
-
 .slide-fade-left-enter-from {
   opacity: 0;
   transform: translateX(40px);
 }
-
 .slide-fade-left-leave-to {
   opacity: 0;
   transform: translateX(-40px);
 }
-
 .phrase-enter-active,
 .phrase-leave-active {
   transition: all 0.35s ease;
 }
-
 .phrase-enter-from {
   opacity: 0;
   transform: translateY(8px);
 }
-
 .phrase-enter-to {
   opacity: 1;
   transform: translateY(0);
 }
-
 .phrase-leave-from {
   opacity: 1;
   transform: translateY(0);
 }
-
 .phrase-leave-to {
   opacity: 0;
   transform: translateY(-8px);

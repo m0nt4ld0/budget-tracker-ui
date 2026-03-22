@@ -15,6 +15,7 @@ export interface MovimientoDto {
   concepto: string;
   importe: number;
   tipoMovimiento: TipoMovimiento;
+  usuario: UsuarioDto;
   moneda: MonedaDto;
 }
 
@@ -35,9 +36,19 @@ export interface GastoDto {
 }
 
 export interface AuthResponseDto {
+  id: number;
   username: string;
   token: string;
   nombre: string;
+  imagenUrl: string;
+  activo: boolean;
+}
+
+export interface UsuarioDto {
+  id: number;
+  nombre: string;
+  usuario: string;
+  email: string;
   imagenUrl: string;
   activo: boolean;
 }

@@ -3,6 +3,7 @@ import type { AuthResponseDto } from "@/types/types";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
+    id:0,
     username: "",
     token: "",
     nombre: "",
@@ -12,6 +13,7 @@ export const useUserStore = defineStore("user", {
 
   actions: {
     login(auth: AuthResponseDto) {
+      this.id = auth.id;
       this.username = auth.username;
       this.token = auth.token;
       this.nombre = auth.nombre;
@@ -31,17 +33,18 @@ export const useUserStore = defineStore("user", {
       localStorage.removeItem("auth");
     },
 
-    loadFromStorage() {
-      const raw = localStorage.getItem("auth");
-      if (!raw) return;
+loadFromStorage() {
+  const raw = localStorage.getItem("auth");
+  if (!raw) return;
 
-      const auth: AuthResponseDto = JSON.parse(raw);
-
-      this.username = auth.username;
-      this.token = auth.token;
-      this.nombre = auth.nombre;
-      this.imagenUrl = auth.imagenUrl;
-      this.activo = auth.activo;
-    },
+  const auth: AuthResponseDto = JSON.parse(raw);
+  
+  this.id = auth.id;
+  this.username = auth.username;
+  this.token = auth.token;
+  this.nombre = auth.nombre;
+  this.imagenUrl = auth.imagenUrl;
+  this.activo = auth.activo;
+},
   },
 });
