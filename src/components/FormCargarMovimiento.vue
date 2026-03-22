@@ -57,20 +57,31 @@
             v-model="movimiento.concepto"
             type="text"
             placeholder="Concepto"
-            class="w-full md:w-auto mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
+            class="w-full md:w-48 mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
           />
           <input
             v-model.number="movimiento.importe"
             type="number"
             step="0.01"
             placeholder="Importe"
-            class="w-full md:w-auto mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
+            class="w-full md:w-32 mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
           />
           <input
             v-model="movimiento.fecha"
             type="date"
-            class="w-full md:w-auto mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
+            class="w-full md:w-36 mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
           />
+
+          <!-- Selector de moneda -->
+          <select
+            v-model.number="movimiento.moneda.id"
+            class="w-full md:w-24 mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
+          >
+            <option v-for="mon in monedaStore.monedas" :key="mon.id" :value="mon.id">
+              {{ mon.codMoneda }}
+            </option>
+          </select>
+
           <select
             v-model.number="movimiento.categoria.id"
             class="w-full md:w-auto mt-2 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
@@ -84,6 +95,7 @@
               {{ cat.categoria }}
             </option>
           </select>
+
           <button
             type="submit"
             :class="[
@@ -93,7 +105,7 @@
                 : 'bg-red-500 hover:bg-red-600 focus:ring-red-500/20'
             ]"
           >
-            Registrar {{ movimiento.tipoMovimiento === 'INGRESO' ? 'ingreso' : 'egreso' }}
+            Registrar
           </button>
         </form>
       </div>
@@ -109,26 +121,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, computed, watch, onMounted } from "vue";
+import { defineComponent, reactive, ref, computed, onMounted, watch } from "vue";
 import { useGastoStore } from "../stores/useGastoStore";
 import { useCategoriaStore } from "../stores/useCategoriaStore";
-import type { MovimientoDto, TipoMovimiento } from "../types/types";
+import { useMonedaStore } from "../stores/useMonedaStore";
+import type { MovimientoDto } from "../types/types";
 import { PlusCircleIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/vue/24/solid";
 import AppModal, { type ModalType } from "./AppModal.vue";
 import { movimientoApi } from "../api/api";
 
 export default defineComponent({
-  name: "FormCargarGasto",
+  name: "FormCargarMovimiento",
   components: { AppModal },
   setup() {
     const store = useGastoStore();
     const categoriaStore = useCategoriaStore();
+    const monedaStore = useMonedaStore();
 
     const visible = ref(false);
     const animating = ref(false);
 
     onMounted(async () => {
-      await categoriaStore.fetchCategorias();
+      await Promise.all([
+        categoriaStore.fetchCategorias(),
+        monedaStore.fetchMonedas(),
+      ]);
     });
 
     const toggle = () => {
@@ -158,27 +175,45 @@ export default defineComponent({
       importe: 0,
       fecha: new Date().toISOString().split("T")[0],
       categoria: { id: 0, categoria: "", icono: "question-mark-circle" },
-      tipoMovimiento: "EGRESO", // default
+      tipoMovimiento: "EGRESO",
+      moneda: { id: 0, codMoneda: "", descMoneda: "" }, // ← nuevo
     });
 
-    // Filtra categorías según el tipo seleccionado
-    const categoriasFiltradas = computed(() => {
-      console.log("filtrando por:", movimiento.tipoMovimiento);
-      console.log("todas las cats:", categoriaStore.categorias.map(c => ({ id: c.id, nombre: c.categoria, tipo: c.tipoMovimiento })));
-      return categoriaStore.categorias.filter(
+    watch(() => monedaStore.monedas, (monedas) => {
+      if (monedas.length && movimiento.moneda.id === 0) {
+        const ars = monedas.find(m => m.codMoneda === 'ARS');
+        if (ars) {
+          movimiento.moneda.id = ars.id;
+          movimiento.moneda.codMoneda = ars.codMoneda;
+          movimiento.moneda.descMoneda = ars.descMoneda;
+        }
+      }
+    }, { immediate: true });
+
+    const categoriasFiltradas = computed(() =>
+      categoriaStore.categorias.filter(
         cat => cat.tipoMovimiento === movimiento.tipoMovimiento
-      );
-    });
+      )
+    );
 
     const resetForm = () => {
       movimiento.concepto = "";
       movimiento.importe = 0;
       movimiento.fecha = new Date().toISOString().split("T")[0];
       movimiento.categoria.id = 0;
+      const ars = monedaStore.monedas.find(m => m.codMoneda === 'ARS');
+      if (ars) {
+        movimiento.moneda.id = ars.id;
+      }
     };
 
     const crear = async () => {
-      if (!movimiento.concepto || movimiento.importe <= 0 || movimiento.categoria.id <= 0) return;
+      if (
+        !movimiento.concepto ||
+        movimiento.importe <= 0 ||
+        movimiento.categoria.id <= 0 ||
+        movimiento.moneda.id <= 0  // ← validar moneda
+      ) return;
 
       try {
         await movimientoApi.crearMovimiento({ ...movimiento });
@@ -201,13 +236,10 @@ export default defineComponent({
       }
     };
 
-    watch(() => categoriaStore.categorias, (cats) => {
-      console.log("categorias:", cats);
-    }, { immediate: true });
-
     return {
       movimiento,
       categoriaStore,
+      monedaStore,
       categoriasFiltradas,
       crear,
       visible,

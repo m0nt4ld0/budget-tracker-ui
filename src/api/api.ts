@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { CategoriaDto, GastoDto, MovimientoDto } from "../types/types";
+import type { CategoriaDto, GastoDto, MovimientoDto, MonedaDto } from "../types/types";
 import type { AuthResponseDto } from "@/types/types";
 import { useUserStore } from "@/stores/useUserStore";
 
@@ -62,6 +62,13 @@ export const categoriaApi = {
   },
   crearCategoria: async (dto: CategoriaDto) => {
     const res = await api.post<CategoriaDto>("/categorias/crear", dto);
+    return res.data;
+  },
+};
+
+export const monedaApi = {
+  getMonedas: async () => {
+    const res = await api.get<MonedaDto[]>("/monedas");
     return res.data;
   },
 };

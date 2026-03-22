@@ -6,7 +6,7 @@
       Hola, <strong class="text-xl md:text-2xl font-bold text-indigo-400 mb-4">{{ userStore.nombre }}</strong>
     </h1>
 
-    <FormCargarGasto />
+    <FormCargarMovimiento />
     <GastosPorCategoria class="mt-6" />
 
       <div class="pt-8 md:pt-10 p-2 md:p-4 overflow-x-auto">
@@ -45,10 +45,10 @@ import { formatARS, formatDate } from "../composables/useUtils";
 import GastosPorCategoria from "../components/GastosPorCategoria.vue";
 import Layout from "@/views/Layout.vue";
 import { useUserStore } from "@/stores/useUserStore";
-import FormCargarGasto from "../components/FormCargarMovimiento.vue";
+import FormCargarMovimiento from "../components/FormCargarMovimiento.vue";
 
 export default defineComponent({
-  components: { CustomTable, Pagination,  Layout, FormCargarGasto, GastosPorCategoria },
+  components: { CustomTable, Pagination,  Layout, FormCargarMovimiento, GastosPorCategoria },
   setup() {
     const store = useGastoStore();
     const categoriaStore = useCategoriaStore();
