@@ -92,6 +92,13 @@ export default defineComponent({
                 </router-link>
               </li>
               <li>
+                <router-link 
+                  to="/perfil" 
+                  class="flex items-center w-full p-2 hover:bg-indigo-500/30 rounded">
+                  Mi perfil
+                </router-link>
+              </li>
+              <li>
                 <button
                   @click="logout"
                   class="flex items-center w-full p-2 hover:bg-red-500/50 hover:text-white rounded text-red-500/100"

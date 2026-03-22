@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { CategoriaDto, GastoDto, MovimientoDto, MonedaDto } from "../types/types";
+import type { CategoriaDto, GastoDto, MovimientoDto, MonedaDto, UsuarioDto } from "../types/types";
 import type { AuthResponseDto } from "@/types/types";
 import { useUserStore } from "@/stores/useUserStore";
 
@@ -119,9 +119,13 @@ export const gastoApi = {
   },
 };
 
-export const registerUserApi = {
+export const usuarioApi = {
   register: async (dto: { nombre: string; usuario: string; email: string }) => {
     const res = await api.post("/user/register", dto);
+    return res.data;
+  },
+  update: async (dto: Partial<UsuarioDto>) => {
+    const res = await api.patch("/user/update", dto);
     return res.data;
   },
 };

@@ -121,7 +121,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, onMounted, onUnmounted, computed } from "vue";
-import { authApi, registerUserApi } from "@/api/api";
+import { authApi, usuarioApi } from "@/api/api";
 import router from "@/router/router";
 import { useUserStore } from "@/stores/useUserStore";
 import Footer from "@/components/Footer.vue";
@@ -181,7 +181,7 @@ export default defineComponent({
     const handleRegister = async () => {
       error.value = "";
       try {
-        await registerUserApi.register({
+        await usuarioApi.register({
           nombre: registerForm.nombre,
           usuario: registerForm.usuario,
           email: registerForm.email,

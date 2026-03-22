@@ -5,6 +5,7 @@ import GastosView from "../views/GastosView.vue";
 import GastosDetalleView from "../views/GastosDetalleView.vue";
 import { useUserStore } from '@/stores/useUserStore'
 import LoginView from "@/views/LoginView.vue";
+import ProfileView from "@/views/ProfileView.vue";
 
 const routes = [
   {
@@ -29,6 +30,12 @@ const routes = [
     path: "/gastos",
     name: "Gastos - Detalle",
     component: GastosDetalleView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/perfil",
+    name: "Perfil",
+    component: ProfileView,
     meta: { requiresAuth: true },
   },
   {

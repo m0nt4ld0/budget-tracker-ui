@@ -45,10 +45,11 @@ export interface AuthResponseDto {
 }
 
 export interface UsuarioDto {
-  id: number;
-  nombre: string;
-  usuario: string;
-  email: string;
-  imagenUrl: string;
-  activo: boolean;
+  id?: number;
+  nombre?: string;
+  usuario?: string;
+  email?: string;
+  imagenUrl?: string;
+  activo?: boolean;
+  //password?: string;
 }
