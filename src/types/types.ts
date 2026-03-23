@@ -15,7 +15,6 @@ export interface MovimientoDto {
   concepto: string;
   importe: number;
   tipoMovimiento: TipoMovimiento;
-  usuario: UsuarioDto;
   moneda: MonedaDto;
 }
 
@@ -25,7 +24,12 @@ export interface CategoriaDto {
   icono: HeroIconName;
   tipoMovimiento?: TipoMovimiento;
   activo?: boolean;
-  usuarioId: number;
+}
+
+export interface UsuarioUpdateDto {
+  nombre?: string;
+  email?: string;
+  imagenUrl?: string;
 }
 
 export interface GastoDto {

@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { CategoriaDto, GastoDto, MovimientoDto, MonedaDto, UsuarioDto } from "../types/types";
+import type { CategoriaDto, GastoDto, MovimientoDto, MonedaDto, UsuarioDto, UsuarioUpdateDto } from "../types/types";
 import type { AuthResponseDto } from "@/types/types";
 import { useUserStore } from "@/stores/useUserStore";
 
@@ -44,27 +44,15 @@ export const authApi = {
     return response.data;
   },
 
-  async register(payload: { name: string; username: string }): Promise<AuthResponseDto> {
-    const response = await api.post<AuthResponseDto>("/auth/register", payload);
+  async register(payload: { nombre: string; usuario: string; email: string }) {
+    const response = await api.post("/user/register", payload);
     return response.data;
   },
 };
 
 export const movimientoApi = {
   crearMovimiento: async (dto: MovimientoDto) => {
-    const userStore = useUserStore();
-    const dtoConUsuario: MovimientoDto = {
-      ...dto,
-      usuario: {
-        id: userStore.id,
-        nombre: userStore.nombre,
-        usuario: userStore.username,
-        email: "",
-        imagenUrl: userStore.imagenUrl,
-        activo: userStore.activo,
-      },
-    };
-    const res = await api.post<MovimientoDto>("/movimientos/crear", dtoConUsuario);
+    const res = await api.post<MovimientoDto>("/movimientos/crear", dto);
     return res.data;
   },
 };
@@ -100,12 +88,11 @@ export const gastoApi = {
     fechaDesde?: string,
     fechaHasta?: string
   ) => {
-    const userStore = useUserStore();
     const res = await api.get<{
       content: GastoDto[];
       totalElements: number;
     }>("/gastos/", {
-      params: { page, size, fechaDesde, fechaHasta, usuarioId: userStore.id },
+      params: { page, size, fechaDesde, fechaHasta },
     });
     return res.data;
   },
@@ -116,10 +103,9 @@ export const gastoApi = {
   },
 
   getTotalesPorCategoria: async (fechaDesde: string, fechaHasta: string) => {
-    const userStore = useUserStore();
     const res = await api.get<Record<string, number>>(
       "/gastos/por-categoria",
-      { params: { fechaDesde, fechaHasta, usuarioId: userStore.id } }
+      { params: { fechaDesde, fechaHasta } }
     );
     return res.data;
   },
@@ -130,7 +116,7 @@ export const usuarioApi = {
     const res = await api.post("/user/register", dto);
     return res.data;
   },
-  update: async (dto: Partial<UsuarioDto>) => {
+  update: async (dto: Partial<UsuarioUpdateDto>) => {
     const res = await api.patch("/user/update", dto);
     return res.data;
   },
