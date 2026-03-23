@@ -5,6 +5,7 @@ export const useUserStore = defineStore("user", {
   state: () => ({
     id:0,
     username: "",
+    email: "",
     token: "",
     nombre: "",
     imagenUrl: "",
@@ -15,6 +16,7 @@ export const useUserStore = defineStore("user", {
     login(auth: AuthResponseDto) {
       this.id = auth.id;
       this.username = auth.username;
+      this.email = auth.email;
       this.token = auth.token;
       this.nombre = auth.nombre;
       this.imagenUrl = auth.imagenUrl;
@@ -25,6 +27,7 @@ export const useUserStore = defineStore("user", {
 
     logout() {
       this.username = "";
+      this.email = "";
       this.token = "";
       this.nombre = "";
       this.imagenUrl = "";
@@ -41,6 +44,7 @@ loadFromStorage() {
   
   this.id = auth.id;
   this.username = auth.username;
+  this.email = auth.email;
   this.token = auth.token;
   this.nombre = auth.nombre;
   this.imagenUrl = auth.imagenUrl;

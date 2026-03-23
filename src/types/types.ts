@@ -38,6 +38,7 @@ export interface GastoDto {
 export interface AuthResponseDto {
   id: number;
   username: string;
+  email: string;
   token: string;
   nombre: string;
   imagenUrl: string;

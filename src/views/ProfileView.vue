@@ -2,7 +2,10 @@
   <Layout>
     <div class="max-w-lg mx-auto">
 
-      <h1 class="text-xl md:text-2xl font-bold mb-6">Mi perfil</h1>
+      <div class="flex flex-col mb-4">
+        <h1 class="text-xl md:text-2xl font-bold">Mi perfil</h1>
+        <a href="/dashboard" class="text-indigo-400 text-xs uppercase tracking-wide hover:text-indigo-500">< Dashboard</a>
+      </div>
 
       <div class="bg-white rounded-xl shadow p-6 flex flex-col gap-6">
 
@@ -161,6 +164,7 @@ export default defineComponent({
         userStore.login({
           id: res.id,
           username: res.usuario,
+          email: res.email,
           token: userStore.token,
           nombre: res.nombre,
           imagenUrl: res.imagenUrl ?? "",
