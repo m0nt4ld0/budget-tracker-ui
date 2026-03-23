@@ -112,26 +112,6 @@ export default defineComponent({
         </div>
       </div>
 
-      <button
-        type="button"
-        class="inline-flex items-center p-2 text-white rounded-lg md:hidden hover:bg-indigo-500/30 focus:ring-2 focus:ring-indigo-300"
-        aria-controls="navbar-user"
-        aria-expanded="false"
-      >
-        <span class="sr-only">Abrir menú</span>
-        <svg 
-          class="w-6 h-6" 
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24">
-          <path 
-            stroke-linecap="round" 
-            stroke-linejoin="round" 
-            stroke-width="2" 
-            d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
-
     </div>
   </nav>
 </template>
