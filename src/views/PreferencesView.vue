@@ -40,12 +40,75 @@
                 <option value="EGRESO">Egreso</option>
                 <option value="INGRESO">Ingreso</option>
               </select>
-              <select
-                v-model="nuevaCategoria.icono"
-                class="w-full md:w-48 rounded-md bg-white border border-gray-400/20 px-3 py-2 text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
-              >
-                <option v-for="(_, key) in heroIcons" :key="key" :value="key">{{ key }}</option>
-              </select>
+              <!-- Inicio selector -->
+                <Listbox v-model="nuevaCategoria.icono" v-slot="{ open }">
+                  <div class="relative w-full md:w-48">
+
+                    <!-- Botón -->
+                    <ListboxButton
+                      class="w-full rounded-md bg-white border border-gray-400/20 px-3 py-2 flex items-center justify-between
+                            focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    >
+                      <div class="flex items-center gap-2 truncate">
+                        <component
+                          :is="heroIcons[nuevaCategoria.icono] ?? defaultIcon"
+                          class="w-5 h-5 text-indigo-500 shrink-0"
+                        />
+                        <span class="truncate">{{ nuevaCategoria.icono }}</span>
+                      </div>
+
+                      <!-- Flecha -->
+                      <ChevronDownIcon
+                        class="w-5 h-5 text-gray-400 transition-transform"
+                        :class="{ 'rotate-180': open }"
+                      />
+                    </ListboxButton>
+
+                    <!-- Opciones con transición -->
+                    <transition
+                      enter-active-class="transition duration-200 ease-out"
+                      enter-from-class="opacity-0 scale-95"
+                      enter-to-class="opacity-100 scale-100"
+                      leave-active-class="transition duration-150 ease-in"
+                      leave-from-class="opacity-100 scale-100"
+                      leave-to-class="opacity-0 scale-95"
+                    >
+                      <ListboxOptions
+                        v-if="open"
+                        class="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto focus:outline-none"
+                      >
+                        <ListboxOption
+                          v-for="option in iconOptions"
+                          :key="option.value"
+                          :value="option.value"
+                          v-slot="{ active, selected }"
+                        >
+                          <li
+                            :class="[
+                              'flex items-center gap-2 px-3 py-2 cursor-pointer transition',
+                              active ? 'bg-indigo-100' : '',
+                              selected ? 'font-medium text-indigo-600' : 'text-gray-700'
+                            ]"
+                          >
+                            <component
+                              :is="heroIcons[option.value] ?? defaultIcon"
+                              class="w-5 h-5 text-indigo-500"
+                            />
+
+                            <span class="flex-1 truncate">{{ option.label }}</span>
+
+                            <CheckIcon
+                              v-if="selected"
+                              class="w-4 h-4 text-indigo-500"
+                            />
+                          </li>
+                        </ListboxOption>
+                      </ListboxOptions>
+                    </transition>
+
+                  </div>
+                </Listbox>
+              <!-- Fin selector-->
               <button type="submit" class="w-full md:w-auto text-white bg-indigo-500 hover:bg-indigo-600 font-medium rounded-full text-sm px-4 py-2.5">
                 Crear
               </button>
@@ -132,6 +195,12 @@ import { heroIcons, defaultIcon } from "@/icons/heroIcons";
 import Layout from "@/views/Layout.vue";
 import AppModal, { type ModalType } from "@/components/AppModal.vue";
 import {
+  Listbox,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
+} from "@headlessui/vue";
+import {
   TagIcon,
   CurrencyDollarIcon,
   PencilIcon,
@@ -143,7 +212,7 @@ import {
 
 export default defineComponent({
   name: "PreferencesView",
-  components: { Layout, AppModal },
+  components: { Layout, AppModal, Listbox, ListboxButton, ListboxOptions, ListboxOption },
   setup() {
     const categoriaStore = useCategoriaStore();
     const userStore = useUserStore();
@@ -180,6 +249,11 @@ export default defineComponent({
     });
 
     const editandoCategoria = ref<CategoriaDto | null>(null);
+
+    const iconOptions = Object.keys(heroIcons).map(key => ({
+      label: key,
+      value: key,
+    }));
 
     const crearCategoria = async () => {
       if (!nuevaCategoria.categoria) return;
@@ -235,6 +309,7 @@ export default defineComponent({
       onModalConfirm,
       heroIcons,
       defaultIcon,
+      iconOptions,
       TagIcon,
       CurrencyDollarIcon,
       PencilIcon,
