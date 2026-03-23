@@ -8,6 +8,9 @@
   },
   "scripts": {
     "dev": "vite",
+    "testing": "vite --mode testing",
+    "build:testing": "vite build --mode testing",
+    "build:prod": "vite build --mode production",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
