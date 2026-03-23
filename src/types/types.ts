@@ -25,6 +25,7 @@ export interface CategoriaDto {
   icono: HeroIconName;
   tipoMovimiento?: TipoMovimiento;
   activo?: boolean;
+  usuarioId: number;
 }
 
 export interface GastoDto {

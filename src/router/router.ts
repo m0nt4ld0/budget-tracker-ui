@@ -1,17 +1,17 @@
 
 import { createRouter, createWebHistory } from "vue-router";
-import CategoriasView from "../views/CategoriasView.vue";
 import GastosView from "../views/GastosView.vue";
 import GastosDetalleView from "../views/GastosDetalleView.vue";
 import { useUserStore } from '@/stores/useUserStore'
 import LoginView from "@/views/LoginView.vue";
 import ProfileView from "@/views/ProfileView.vue";
+import PreferencesView from "../views/PreferencesView.vue";
 
 const routes = [
   {
-    path: "/categorias",
-    name: "Categorias",
-    component: CategoriasView,
+    path: "/preferencias",
+    name: "Preferencias",
+    component: PreferencesView,
     meta: { requiresAuth: true },
   },
   {

@@ -78,6 +78,12 @@ export const categoriaApi = {
     const res = await api.post<CategoriaDto>("/categorias/crear", dto);
     return res.data;
   },
+  editarCategoria: async (id: number, dto: CategoriaDto) => {
+    await api.patch(`/categorias/update/${id}`, dto);
+  },
+  eliminarCategoria: async (id: number) => {
+    await api.patch(`/categorias/delete/${id}`);
+  },
 };
 
 export const monedaApi = {

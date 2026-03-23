@@ -86,7 +86,7 @@ export default defineComponent({
               </li>
               <li>
                 <router-link 
-                  to="/categorias" 
+                  to="/preferencias" 
                   class="flex items-center w-full p-2 hover:bg-indigo-500/30 rounded">
                   Configuración
                 </router-link>
